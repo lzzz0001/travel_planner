@@ -88,6 +88,86 @@ AI_Travel_Planner/
 
 3. **Open your browser** and navigate to `http://localhost:5173`
 
+## 🐳 Docker Deployment
+
+This project includes Docker configuration files for easy deployment. You can run the entire application using Docker Compose.
+
+### Prerequisites for Docker Deployment
+
+- Docker Engine (version 19.03 or higher)
+- Docker Compose (version 1.27 or higher)
+
+### Running with Docker Compose
+
+1. **Build and start the services:**
+   ```bash
+   docker-compose up --build
+   ```
+
+2. **Access the application:**
+   - Frontend: http://localhost
+   - Backend API: http://localhost:3001
+
+3. **Stop the services:**
+   ```bash
+   docker-compose down
+   ```
+
+### Building Docker Images
+
+You can build the Docker images separately using the provided scripts:
+
+**On Linux/Mac:**
+```bash
+./build-docker-images.sh
+```
+
+**On Windows:**
+```powershell
+.\build-docker-images.ps1
+```
+
+Or build manually:
+```bash
+# Build backend
+cd backend
+docker build -t ai-travel-planner-backend:latest .
+
+# Build frontend
+cd ../frontend
+docker build -t ai-travel-planner-frontend:latest .
+```
+
+### Docker Images
+
+The project includes Dockerfiles for both frontend and backend services:
+
+- **Frontend**: React application served by Nginx
+- **Backend**: Node.js Express server
+
+### Environment Configuration for Docker
+
+When running with Docker, you can configure environment variables using a `.env` file in the root directory:
+
+```env
+# Backend environment variables
+PORT=3001
+ALIBABA_CLOUD_ACCESS_KEY_ID=your_alibaba_cloud_access_key_id
+ALIBABA_CLOUD_ACCESS_KEY_SECRET=your_alibaba_cloud_access_key_secret
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_KEY=your_supabase_api_key
+BAIDU_MAPS_API_KEY=your_baidu_maps_api_key
+
+# Frontend environment variables
+REACT_APP_API_URL=http://localhost:3001
+REACT_APP_ALIBABA_CLOUD_API_KEY=your_alibaba_cloud_api_key
+REACT_APP_SUPABASE_URL=your_supabase_project_url
+REACT_APP_SUPABASE_KEY=your_supabase_api_key
+REACT_APP_BAIDU_MAPS_API_KEY=your_baidu_maps_api_key
+REACT_APP_IFLYTEK_APP_ID=your_iflytek_app_id
+REACT_APP_IFLYTEK_API_KEY=your_iflytek_api_key
+```
+
 ## 🔧 Configuration
 
 To use the full functionality of the application, you'll need to configure API keys:
