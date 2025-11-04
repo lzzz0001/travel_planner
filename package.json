@@ -1,0 +1,26 @@
+{
+  "name": "ai-travel-planner",
+  "version": "1.0.0",
+  "description": "A web-based AI travel planner that helps users create personalized travel itineraries using voice input and AI technology",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "start": "node backend/server.js"
+  },
+  "keywords": [
+    "travel",
+    "ai",
+    "planner",
+    "voice-recognition",
+    "react",
+    "nodejs"
+  ],
+  "author": "AI Travel Planner Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}

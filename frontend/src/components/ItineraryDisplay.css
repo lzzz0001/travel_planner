@@ -1,0 +1,178 @@
+.itinerary-display {
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.itinerary-display h2 {
+  color: #333;
+  text-align: center;
+  margin-top: 0;
+}
+
+.itinerary-summary {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: 20px 0;
+  gap: 15px;
+}
+
+.summary-item {
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+  flex: 1;
+  min-width: 150px;
+}
+
+.summary-item h3 {
+  margin-top: 0;
+  color: #007bff;
+  font-size: 16px;
+}
+
+.summary-item p {
+  margin: 5px 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.itinerary-details {
+  margin: 30px 0;
+}
+
+.itinerary-day {
+  margin-bottom: 30px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.itinerary-day h3 {
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+
+.activities {
+  margin-top: 15px;
+}
+
+.activity {
+  display: flex;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.activity:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.activity-time {
+  font-weight: bold;
+  color: #007bff;
+  min-width: 70px;
+  margin-right: 20px;
+}
+
+.activity-details h4 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.activity-location {
+  font-style: italic;
+  color: #666;
+  margin: 5px 0;
+}
+
+.activity-description {
+  color: #555;
+  margin: 5px 0;
+}
+
+.activity-cost {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.itinerary-section {
+  margin: 30px 0;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.itinerary-section h3 {
+  color: #007bff;
+  margin-top: 0;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.accommodations-list, .transportation-list, .restaurants-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.accommodation, .transportation, .restaurant {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.accommodation h4, .transportation h4, .restaurant h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.accommodation a {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.accommodation a:hover {
+  background-color: #0056b3;
+}
+
+.tips-list {
+  padding-left: 20px;
+}
+
+.tips-list li {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.total-cost {
+  text-align: center;
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #d4edda;
+  border-radius: 8px;
+}
+
+.total-cost h3 {
+  margin: 0;
+  color: #155724;
+}
