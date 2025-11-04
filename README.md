@@ -70,6 +70,32 @@ AI_Travel_Planner/
    npm install
    ```
 
+### Environment Configuration
+
+The project includes example environment files that you need to copy and configure with your own API keys.
+
+#### Frontend Environment Configuration
+
+1. Copy the example file:
+   ```bash
+   cd frontend
+   cp .env.example .env
+   ```
+
+2. Edit the `.env` file and replace the placeholder values with your actual API keys.
+
+#### Backend Environment Configuration
+
+1. Copy the example file:
+   ```bash
+   cd backend
+   cp .env.example .env
+   ```
+
+2. Edit the `.env` file and replace the placeholder values with your actual API keys.
+
+Refer to the [Setup Guide](docs/setup.md) for detailed configuration instructions.
+
 ### Running the Application
 
 1. **Start the backend server:**

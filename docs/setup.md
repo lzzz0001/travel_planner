@@ -56,31 +56,65 @@ npm install
 
 ### 4. Environment Configuration
 
-#### Frontend Environment Variables
+The project includes example environment files that you need to copy and configure with your own API keys.
 
-Create a `.env` file in the `frontend` directory with the following variables:
+#### Frontend Environment Configuration
 
-```env
-REACT_APP_ALIBABA_CLOUD_API_KEY=your_alibaba_cloud_api_key
-REACT_APP_SUPABASE_URL=your_supabase_project_url
-REACT_APP_SUPABASE_KEY=your_supabase_api_key
-REACT_APP_BAIDU_MAPS_API_KEY=your_baidu_maps_api_key
-REACT_APP_IFLYTEK_APP_ID=your_iflytek_app_id
-REACT_APP_IFLYTEK_API_KEY=your_iflytek_api_key
-```
+1. Copy the example file:
+   ```bash
+   cd frontend
+   cp .env.example .env
+   ```
 
-#### Backend Environment Variables
+2. Edit the `.env` file and replace the placeholder values with your actual API keys:
+   ```env
+   # API Configuration
+   REACT_APP_API_URL=http://localhost:3001
 
-Create a `.env` file in the `backend` directory with the following variables:
+   # Alibaba Cloud API Key for AI travel planning
+   REACT_APP_ALIBABA_CLOUD_API_KEY=your_actual_alibaba_cloud_api_key
 
-```env
-PORT=3001
-ALIBABA_CLOUD_ACCESS_KEY_ID=your_alibaba_cloud_access_key_id
-ALIBABA_CLOUD_ACCESS_KEY_SECRET=your_alibaba_cloud_access_key_secret
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_KEY=your_supabase_api_key
-BAIDU_MAPS_API_KEY=your_baidu_maps_api_key
-```
+   # Supabase Configuration
+   REACT_APP_SUPABASE_URL=your_actual_supabase_project_url
+   REACT_APP_SUPABASE_KEY=your_actual_supabase_api_key
+
+   # Baidu Maps API Key
+   REACT_APP_BAIDU_MAPS_API_KEY=your_actual_baidu_maps_api_key
+
+   # iFlytek Speech Recognition API Keys
+   REACT_APP_IFLYTEK_APP_ID=your_actual_iflytek_app_id
+   REACT_APP_IFLYTEK_API_KEY=your_actual_iflytek_api_key
+   ```
+
+#### Backend Environment Configuration
+
+1. Copy the example file:
+   ```bash
+   cd backend
+   cp .env.example .env
+   ```
+
+2. Edit the `.env` file and replace the placeholder values with your actual API keys:
+   ```env
+   # Server Configuration
+   PORT=3001
+   NODE_ENV=development
+
+   # Alibaba Cloud API Keys for AI travel planning
+   ALIBABA_CLOUD_ACCESS_KEY_ID=your_actual_alibaba_cloud_access_key_id
+   ALIBABA_CLOUD_ACCESS_KEY_SECRET=your_actual_alibaba_cloud_access_key_secret
+
+   # Supabase Configuration
+   SUPABASE_URL=your_actual_supabase_project_url
+   SUPABASE_KEY=your_actual_supabase_api_key
+
+   # Baidu Maps API Key
+   BAIDU_MAPS_API_KEY=your_actual_baidu_maps_api_key
+
+   # iFlytek Speech Recognition API Keys (if using iFlytek instead of Web Speech API)
+   IFLYTEK_APP_ID=your_actual_iflytek_app_id
+   IFLYTEK_API_KEY=your_actual_iflytek_api_key
+   ```
 
 ### 5. API Keys Setup
 
@@ -165,12 +199,30 @@ This project includes Docker configuration files for easy deployment. You can ru
    docker-compose down
    ```
 
-### Docker Images
+### Building Docker Images
 
-The project includes Dockerfiles for both frontend and backend services:
+You can build the Docker images separately using the provided scripts:
 
-- **Frontend**: React application served by Nginx
-- **Backend**: Node.js Express server
+**On Linux/Mac:**
+```bash
+./build-docker-images.sh
+```
+
+**On Windows:**
+```powershell
+.\build-docker-images.ps1
+```
+
+Or build manually:
+```bash
+# Build backend
+cd backend
+docker build -t ai-travel-planner-backend:latest .
+
+# Build frontend
+cd ../frontend
+docker build -t ai-travel-planner-frontend:latest .
+```
 
 ### Environment Configuration for Docker
 
