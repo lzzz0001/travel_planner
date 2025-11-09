@@ -34,7 +34,7 @@ const Auth = ({ onAuthChange }) => {
       setUser(user);
       if (onAuthChange) onAuthChange(user);
     } catch (err) {
-      setError(err.message || 'Authentication failed');
+      setError(err.message || '认证失败');
     } finally {
       setLoading(false);
     }
@@ -46,16 +46,16 @@ const Auth = ({ onAuthChange }) => {
       setUser(null);
       if (onAuthChange) onAuthChange(null);
     } catch (err) {
-      setError(err.message || 'Sign out failed');
+      setError(err.message || '退出登录失败');
     }
   };
 
   if (user) {
     return (
       <div className="auth-status">
-        <p>Welcome, {user.email}!</p>
+        <p>欢迎，{user.email}!</p>
         <button onClick={handleSignOut} disabled={loading}>
-          {loading ? 'Signing out...' : 'Sign Out'}
+          {loading ? '正在退出...' : '退出登录'}
         </button>
       </div>
     );
@@ -63,14 +63,14 @@ const Auth = ({ onAuthChange }) => {
 
   return (
     <div className="auth-form">
-      <h2>{isLogin ? 'Sign In' : 'Sign Up'}</h2>
+      <h2>{isLogin ? '登录' : '注册'}</h2>
       {error && <div className="error-message">{error}</div>}
       
       <form onSubmit={handleAuth}>
         <div className="form-group">
           <input
             type="email"
-            placeholder="Email"
+            placeholder="邮箱"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -80,7 +80,7 @@ const Auth = ({ onAuthChange }) => {
         <div className="form-group">
           <input
             type="password"
-            placeholder="Password"
+            placeholder="密码"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -88,7 +88,7 @@ const Auth = ({ onAuthChange }) => {
         </div>
         
         <button type="submit" disabled={loading}>
-          {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
+          {loading ? '处理中...' : (isLogin ? '登录' : '注册')}
         </button>
       </form>
       
@@ -96,7 +96,7 @@ const Auth = ({ onAuthChange }) => {
         onClick={() => setIsLogin(!isLogin)}
         className="toggle-auth-mode"
       >
-        {isLogin ? 'Need an account? Sign Up' : 'Have an account? Sign In'}
+        {isLogin ? '需要账号？立即注册' : '已有账号？立即登录'}
       </button>
     </div>
   );

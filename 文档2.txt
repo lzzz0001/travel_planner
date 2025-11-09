@@ -1,0 +1,493 @@
+Hello World
+更新时间：2022年08月07日
+百度地图的“Hello, World”
+开始学习百度地图JS API最简单的方式是看一个简单的示例。该示例帮助您快速了解百度地图API的基本使用，快速创建一张“我的地图”。
+
+如下代码可以实现一个简单完整的全屏展示的地图Demo：
+<!DOCTYPE html> 
+<html>
+<head> 
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" /> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>Hello, World</title> 
+<style type="text/css"> 
+html{height:100%} 
+body{height:100%;margin:0px;padding:0px} 
+#container{height:100%} 
+</style> 
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=您的密钥">
+</script>
+</head> 
+  
+<body> 
+<div id="container"></div>
+<script type="text/javascript">
+var map = new BMapGL.Map("container");
+// 创建地图实例 
+var point = new BMapGL.Point(116.404, 39.915);
+// 创建点坐标 
+map.centerAndZoom(point, 15);
+// 初始化地图，设置中心点坐标和地图级别 
+</script> 
+</body> 
+</html>
+DEMO详情
+
+下面我们分步向您介绍如何快速开始地图开发：
+
+1申请百度账号和ak
+点我申请
+2准备页面
+根据HTML标准，每一份HTML文档都应该声明正确的文档类型，我们建议您使用最新的符合HTML5规范的文档声明：
+
+<!DOCTYPE html>
+您也可以根据需要选择其他类型的文档声明，这样浏览器会以标准的方式对页面进行渲染，保证页面最大的兼容性。我们不建议您使用quirks模式进行开发。
+
+3适应移动端页面展示
+下面我们添加一个meta标签，以便使您的页面更好的在移动平台上展示。
+
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />  
+4设置容器样式
+设置容器样式大小，使地图充满整个浏览器窗口：
+
+<style type="text/css">  
+    html{height:100%}    
+    body{height:100%;margin:0px;padding:0px}    
+    #container{height:100%}    
+</style> 
+5引用百度地图API文件
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=您的密钥">
+</script>
+6创建地图容器元素
+地图需要一个HTML元素作为容器，这样才能展现到页面上。这里我们创建了一个div元素。
+
+<div id="container"></div> 
+7创建地图实例
+位于BMapGL命名空间下的Map类表示地图，通过new操作符可以创建一个地图实例。其参数可以是元素id也可以是元素对象。
+
+var map = new BMapGL.Map("container");
+注意：
+
+1、在调用此构造函数时应确保容器元素已经添加到地图上；
+
+2、命名空间 API GL版使用BMapGL作为命名空间，所有类均在该命名空间之下，比如：BMapGL.Map、BMapGL.Control、BMapGL.Overlay；
+
+8设置中心点坐标
+这里我们使用BMapGL命名空间下的Point类来创建一个坐标点。Point类描述了一个地理坐标点，其中116.404表示经度，39.915表示纬度。（为天安门坐标）
+
+var point = new BMapGL.Point(116.404, 39.915);
+注意：
+
+在使用百度地图JavaScript API服务时，需使用百度BD09坐标，如使用其他坐标（ WGS84、GCJ02）进行展示，需先将其他坐标转换为BD09，详细说明请参考坐标转换说明，请勿使用非官方的转换方法。
+
+
+
+9地图初始化，同时设置地图展示级别
+在创建地图实例后，我们需要对其进行初始化，BMapGL.Map.centerAndZoom()方法要求设置中心点坐标和地图级别。 地图必须经过初始化才可以执行其他操作
+
+map.centerAndZoom(point, 15); 
+至此，我们就快速创建了一张以天安门为中心的地图。
+地图配置与操作
+JS API中的地图对象的外观与行为与百度地图网站上交互的地图非常相似。它支持鼠标拖拽、滚轮缩放、双击放大等交互功能。您也可以修改配置来改变这些功能。
+
+比如，默认情况下地图不支持鼠标滚轮缩放操作，因为这样可能会影响整个页面的用户体验，但是如果您希望在地图中使用鼠标滚轮控制缩放，则可以调用map.enableScrollWheelZoom方法来开启。配置选项可以在Map类参考中找到。
+
+此外，您还可以通过编程的方式与地图交互。Map类提供了若干修改地图状态的方法。例如：setTilt()、setCenter()、panTo()、zoomTo()等等。详细可以参考示例DEMO。
+
+
+
+
+--------------------------------------------
+出行路线规划
+更新时间：2021年7月23日 
+简介
+百度地图JavaScript API GL提供了驾车、公交、步行三种出行方式的路线规划功能。开发者在使用线路规划的接口时，可以使用我们提供的默认展示效果。也可以通过监听事件回调，使用检索数据完成自己的需求。
+DEMO详情
+
+驾车路线规划
+1基础驾车路线规划服务示例：
+代码如下：
+var map = new BMapGL.Map("container");
+            map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 11);
+
+            var p1 = new BMapGL.Point(116.301934,39.977552);
+            var p2 = new BMapGL.Point(116.508328,39.919141);
+
+            var driving = new BMapGL.DrivingRoute(map, {renderOptions:{map: map, autoViewport: true}});
+            driving.search(p1, p2);
+公交路线规划
+BMapGL.TransitRoute类提供公交线路规划服务。
+1使用服务示例
+代码如下：
+var map = new BMapGL.Map('container');
+                map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 12);
+                var output = '从上地到西单坐公交需要：';
+                var transit = new BMapGL.TransitRoute(map,{
+                    renderOptions: {map: map},
+                    onSearchComplete: function(results){
+                        if (transit.getStatus() != BMAP_STATUS_SUCCESS){
+                            return ;
+                        }
+                        var plan = results.getPlan(0);
+                        output += '总时长：' + plan.getDuration(true);  //获取时间
+                        output += '总路程：' + plan.getDistance(true);  //获取距离
+                        $('#result').css('display','block');
+                        $('#result').html(output);
+                    },
+                });
+                var start=new BMapGL.Point(116.404844,39.911836);
+                var end=new BMapGL.Point(116.308102,40.056057);
+                transit.search(start, end);
+步行路线规划
+BMapGL.WalkingRoute提供步行线路规划服务。基本用法和驾车线路规划类似。
+1使用服务示例
+代码如下：
+            var map = new BMapGL.Map("allmap");
+            map.enableScrollWheelZoom();
+            map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 11);
+            var walking = new BMapGL.WalkingRoute(map, {renderOptions:{map: map, autoViewport: true}});
+            walking.search('西单', '慈云寺');
+
+
+
+------------------------------------------------------------------------------------
+定位
+更新时间：2021年03月07日 
+简介
+JavaScript API提供在Web端获取当前位置信息的方法，融合了浏览器定位、IP定位、安卓定位SDK辅助定位等多种手段，提供了获取当前准确位置、获取当前城市信息等功能。
+浏览器定位精度和性能依赖浏览器自身特性，IP定位的精度值为城市级别。
+对于安卓WebView页面的开发者，可以结合定位SDK进行辅助定位，使用方法参见定位SDK相关章节。
+
+注意：
+1.由于Chrome、iOS10以上系统等已不再支持非安全域的浏览器定位请求，为保证定位成功率和精度，请尽快升级您的站点到HTTPS。
+2.iOS15系统浏览器默认关闭位置请求，需要用户设置手机为允许/询问后方可获取精确的定位,定位权限的开启方式请参见iOS15定位问题。
+3.由于浏览器原生定位成功率并不高，我们提供ip和安卓sdk定位进行辅助，如果定位精准在城市级别，可提供ak联系我们提高定位精准度。
+提供的定位服务
+接口	类名	说明
+浏览器定位	Geolocation	优先调用浏览器H5定位接口，如果失败会调用IP定位
+IP定位	LocalCity	根据用户IP 返回城市级别的定位结果
+定位SDK辅助定位	Geolocation	当您的APP中有内置的Web页面，同时在Web页面需要提供您的当前位置信息时，可调用集成在App中的百度地图定位SDK来获取更精准的位置信息
+状态码说明
+状态码	说明
+6	ERR_PERMISSION_DENIED，没有权限，定位被拒绝
+2	ERR_POSITION_UNAVAILABLE，定位不可用
+8	ERR_POSITION_UNAVAILABLE，定位超时
+定位方法代码示例
+1浏览器定位
+var map = new BMapGL.Map("allmap");
+        var point = new BMapGL.Point(116.331398,39.897445);
+        map.centerAndZoom(point,12);
+        
+        var geolocation = new BMapGL.Geolocation();
+        geolocation.getCurrentPosition(function(r){
+            if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                var mk = new BMapGL.Marker(r.point);
+                map.addOverlay(mk);
+                map.panTo(r.point);
+                alert('您的位置：' + r.point.lng + ',' + r.point.lat);
+            }
+            else {
+                alert('failed' + this.getStatus());
+            }        
+        });
+2IP定位
+var map = new BMapGL.Map("allmap");
+    var point = new BMapGL.Point(116.331398,39.897445);
+    map.centerAndZoom(point,12);
+    
+    function myFun(result){
+        var cityName = result.name;
+        map.setCenter(cityName);
+        alert("当前定位城市:" + cityName);
+    }
+    var myCity = new BMapGL.LocalCity();
+    myCity.get(myFun); 
+3定位SDK辅助定位
+var map = new BMapGL.Map("allmap");
+    var point = new BMapGL.Point(116.331398,39.897445);
+    map.centerAndZoom(point,12);
+            
+    var geolocation = new BMapGL.Geolocation();
+    // 开启SDK辅助定位
+    geolocation.enableSDKLocation();
+    geolocation.getCurrentPosition(function(r){
+        if(this.getStatus() == BMAP_STATUS_SUCCESS){
+            var mk = new BMap.Marker(r.point);
+            map.addOverlay(mk);
+            map.panTo(r.point);
+            alert('您的位置：' + r.point.lng + ',' + r.point.lat);
+        }
+        else {
+            alert('failed' + this.getStatus());
+-------------------------------------------------------
+
+
+
+
+
+
+地理编码
+下载开发文档
+前往示例中心在线体验
+接口说明
+用户可通过该功能，将结构化地址（省/市/区/街道/门牌号）解析为对应的位置坐标。地址结构越完整，地址内容越准确，解析的坐标精度越高。
+
+使用说明
+当前为V3.0版本接口文档，V2.0及以前版本自2019.6.18起新用户无法使用。老用户仍可继续使用V2.0及以前版本请求实现全球逆地理编码服务，为保障用户体验，建议您尽快迁移到V3.0版本。
+
+API服务地址
+https://api.map.baidu.com/geocoding/v3/?address=北京市海淀区上地十街10号&output=json&ak=您的ak&callback=showLocation
+//GET请求
+
+请求参数
+参数名称	参数含义	示例	类型	默认值	必选
+address	
+待解析的地址。最多支持128个字节。
+可以输入两种样式的值，分别是：
+1、标准的结构化地址信息，如北京市海淀区上地十街十号【推荐，地址结构越完整，解析精度越高】
+2、支持“*路与*路交叉口”描述方式，如北一环路和阜阳路的交叉路口
+第二种方式并不总是有返回结果，只有当地址库中存在该地址描述时才有返回。
+
+北京市海淀区上地十街10号	string	无	是
+ak	
+用户申请注册的key，自v2开始参数修改为“ak”，之前版本参数为“key”申请ak
+
+无	string		是
+city	地址所在的城市名。用于指定上述地址所在的城市，当多个城市都有上述地址时，该参数起到过滤作用，但不限制坐标召回城市。	北京市	string	无	否
+ret_coordtype	
+返回的坐标类型，可选参数，添加后返回国测局经纬度坐标或百度米制坐标 坐标系说明
+
+gcj02ll（国测局坐标）、bd09mc（百度墨卡托坐标）	string	bd09ll（百度经纬度坐标）	否
+sn	
+若用户所用ak的校验方式为sn校验时该参数必须sn生成
+
+无	string		否
+output	输出格式为json或者xml	json或xml	string	xml	否
+callback	将json格式的返回值通过callback函数返回以实现jsonp功能	callback=showLocation(JavaScript函数名)	string	无	否
+extension_analys_level	是否触发解析到最小地址结构功能	
+extension_analys_level=1或true时，触发analys_level;字段返回参数；
+extension_analys_level=0或false时；
+analys_level字段不返回参数；
+
+string	0	否
+返回参数
+返回参数	类型	备注
+status	int	本次API访问状态，如果成功返回0，如果失败返回其他数字。（见服务状态码）
+result	object	返回的结果
+location	object	经纬度坐标
+lng	float	经度值
+lat	float	纬度值
+precise	int	位置的附加信息，是否精确查找。1为精确查找，即准确打点；0为不精确，即模糊打点。
+confidence	int	描述打点绝对精度（即坐标点的误差范围）。
+confidence=100，解析误差绝对精度小于20m；
+confidence≥90，解析误差绝对精度小于50m；
+confidence≥80，解析误差绝对精度小于100m；
+confidence≥75，解析误差绝对精度小于200m；
+confidence≥70，解析误差绝对精度小于300m；
+confidence≥60，解析误差绝对精度小于500m；
+confidence≥50，解析误差绝对精度小于1000m；
+confidence≥40，解析误差绝对精度小于2000m；
+confidence≥30，解析误差绝对精度小于5000m；
+confidence≥25，解析误差绝对精度小于8000m；
+confidence≥20，解析误差绝对精度小于10000m；
+comprehension	int	描述地址理解程度。分值范围0-100，分值越大，服务对地址理解程度越高（建议以该字段作为解析结果判断标准）；
+当comprehension值为以下值时，对应的准确率如下：
+comprehension=100，解析误差100m内概率为91%，误差500m内概率为96%；
+comprehension≥90，解析误差100m内概率为89%，误差500m内概率为96%；
+comprehension≥80，解析误差100m内概率为88%，误差500m内概率为95%；
+comprehension≥70，解析误差100m内概率为84%，误差500m内概率为93%；
+comprehension≥60，解析误差100m内概率为81%，误差500m内概率为91%；
+comprehension≥50，解析误差100m内概率为79%，误差500m内概率为90%；
+//解析误差：地理编码服务解析地址得到的坐标位置，与地址对应的真实位置间的距离。
+level	string	可以打点到地址文本中的真实地址结构，
+例如问题地址：北京市海淀区北京路百度大厦，level："道路"
+能精确理解的地址类型，包含：UNKNOWN、国家、省、城市、区县、乡镇、村庄、道路、地产小区、商务大厦、政府机构、交叉路口、商圈、生活服务、休闲娱乐、餐饮、宾馆、购物、金融、教育、医疗 、工业园区 、旅游景点 、汽车服务、火车站、长途汽车站、桥 、停车场/停车区、港口/码头、收费区/收费站、飞机场 、机场 、收费处/收费站 、加油站、绿地、门址
+analys_level	string	可以解析地址文本中的最小地址结构，
+例如问题地址：北京市海淀区北京路百度大厦，analys_level："POI"，
+能精确理解的地址类型包含: 省 市 区县 乡镇 道路 门址 POI 。
+示例代码
+前往示例中心在线体验
+填写您的AK
+8f2IhQc8fPRrF1ejMr3t6jILwx4WqRbG
+输入AK可生成包含IP/SN校验方式的代码
+
+PHP
+Go
+C++
+Python
+JAVA
+Bash
+<?php 
+    // 根据您选择的AK已为您生成调用代码
+    // 检测到您当前的ak设置了IP白名单校验
+    // 您的IP白名单中的IP非公网IP，请设置为公网IP，否则将请求失败
+    // 请在IP地址为0.0.0.0/0 外网IP的计算发起请求，否则将请求失败
+    // 此处填写你在控制台-应用管理-创建应用后获取的AK
+    $ak = '8f2IhQc8fPRrF1ejMr3t6jILwx4WqRbG';
+    
+    // 发起一个http get请求，并返回请求的结果
+    // $url字段为请求的地址
+    // $param字段为请求的参数
+    function request_get($url = '', $param = array()) {
+        if (empty($url) || empty($param)) {
+            return false;
+        }
+        
+        $getUrl = $url . "?" . http_build_query($param);
+        $curl = curl_init(); // 初始化curl
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查   
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2); // 从证书中检查SSL加密算法是否存在
+        curl_setopt($curl, CURLOPT_URL, $getUrl); // 抓取指定网页
+        curl_setopt($curl, CURLOPT_TIMEOUT, 1000); // 设置超时时间1秒
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); // curl不直接输出到屏幕
+        curl_setopt($curl, CURLOPT_HEADER, 0); // 设置header
+        $data = curl_exec($curl); // 运行curl
+
+        if (!$data) {
+            print("an error occured in function request_get(): " . curl_error($curl) . "\n");
+        }
+
+        curl_close($curl);
+        
+        return $data;
+    }
+
+    // 请求地址
+    $url = 'https://api.map.baidu.com/geocoding/v3/';
+    
+    // 接口地址
+    $param['address']   = '北京市海淀区上地十街10号';
+    $param['output']   = 'json';
+    $param['ak']   = $ak;
+    $param['callback']   = 'showLocation';
+
+
+    $res = request_get($url, $param);
+
+    // 将原始返回的结果打印出来
+    print("请求的原始返回结果为:\n");
+    print($res . "\n");
+?>
+
+JSON
+XML
+{
+    "status": 0,
+    "result": {
+      "location": {
+        "lng": 116.30762232672,
+        "lat": 40.056828485961
+      },
+      "precise": 1,
+      "confidence": 80,
+      "comprehension": 100,
+      "level": "门址"
+    }
+  }
+在线运行
+参数	值	备注	必选
+address	
+北京市海淀区上地十街10号
+检索行政区划关键字。
+行政区划区域检索不支持多关键字检索 关键字可填写：行政区名称（"中华人民共和国"/"中国"/"全国"，省、市、区和镇名称）以及 adcode；
+Adcode信息可参考（百度地图行政区划adcode映射表）	是
+output	
+输出格式为json或者xml	否
+服务状态码
+返回码	英文描述	定义	常见原因	
+0	OK	正常状态	服务请求正常召回
+1		服务器内部错误	
+2	Parameter Invalid	请求参数非法	必要参数拼写错误或漏传（如query和tag请求中均未传入）
+3	Verify Failure	权限校验失败	服务请求正常召回
+4	Quota Failure	配额校验失败	服务当日调用次数已超限，请前往API控制台提升（请优先进行开发者认证）
+5	AK Failure	ak不存在或者非法	未传入ak参数；ak已被删除（可前往回收站恢复）
+101		AK参数不存在	请求消息没有携带AK参数
+102		不通过白名单或者安全码不对	
+240		APP 服务被禁用	用户在API控制台中创建或设置某APP的时候禁用了某项服务，若需开通权限，可进入API控制台为AK勾选对应服务
+2xx		无权限	
+3xx		配额错误	
+————————————————————————————
+地图事件
+更新时间：2020年08月07日
+简介
+浏览器中的JavaScript是“事件驱动的”，这表示JavaScript通过生成事件来响应交互，并期望程序能够“监听”感兴趣的活动。例如，在浏览器中，用户的鼠标和键盘交互可以创建在DOM内传播的事件。根据需求对这些事件注册JavaScript事件监听器，并在接收这些事件时执行代码。
+百度地图API拥有一个自己的事件模型，程序员可监听地图API对象的自定义事件，使用方法和DOM事件类似。但请注意，地图API事件是独立的，与标准DOM事件不同。可以点击下图体验。
+
+DEMO详情
+
+事件监听
+百度地图API中的大部分对象都含有addEventListener方法，您可以通过该方法来监听对象事件。例如，BMapGL.Map包含click、dblclick等事件。在特定环境下这些事件会被触发，同时监听函数会得到相应的事件参数e，比如当用户点击地图时，e参数会包含鼠标所对应的地理位置latlng。
+
+1参考展示地图创建基本地图
+2监听地图的单击事件
+addEventListener方法有两个参数：监听的事件名称和事件触发时调用的函数。 如下示例中，每当用户点击地图时，会弹出一个警告框：
+
+map.addEventListener('click', function(e) {
+        alert('click!')
+});
+3在回调函数中添加一些逻辑
+通过回调函数的参数，可以获取当前点击点的经纬度信息，下面的例子弹出了获取的经纬度，和转换后的墨卡托坐标地址。
+
+map.addEventListener('click', function(e) {
+    alert('点击的经纬度：' + e.latlng.lng + ', ' + e.latlng.lat);
+    var mercator = map.lnglatToMercator(e.latlng.lng, e.latlng.lat);
+    alert('点的墨卡托坐标：' + mercator[0] + ', ' + mercator[1]);
+});
+4移除事件监听
+可以通过removeEventListener方法移除对事件的监听。
+
+map.addEventListener('click', handleClick);
+function handleClick (e) {
+    alert('点击的经纬度：' + e.latlng.lng + ', ' + e.latlng.lat);
+    var mercator = map.lnglatToMercator(e.latlng.lng, e.latlng.lat);
+    alert('点的墨卡托坐标：' + mercator[0] + ', ' + mercator[1]);
+}
+map.removeEventListener('click', handleClick);
+-----------------------------------
+右键菜单
+更新时间：2020年08月07日
+简介
+Javascript API GL支持右键菜单，您可以在地图上添加自定义内容的右键菜单。
+
+DEMO详情
+
+添加右键菜单
+Javascript API GL提供了addContextMenu方法来向地图添加自定义右键菜单。
+1创建基本地图
+var map = new BMapGL.Map("allmap");                // 创建地图实例
+var point = new BMapGL.Point(116.404, 39.915);     // 设置中心点坐标
+map.centerAndZoom(point, 12);                      // 设置地图级别
+map.enableScrollWheelZoom();                       // 开启鼠标滚轮缩放
+2定义菜单项
+Javascript API GL提供了MenuItem构造函数来定义菜单项实例，其接收三个参数，分别是菜单项显示的文本（string）、点击后的回调函数（Function）以及一个可选的MenultOptions（对象字面量）参数。
+
+在MenultOptions中，您可以指定菜单项的宽度以及菜单项dom的id。
+
+var txtMenuItem = [
+        {
+            text:'放大',                             // 定义菜单项的显示文本
+            callback: function () {                 // 定义菜单项点击触发的回调函数
+                map.zoomIn();
+            }
+        },
+        {
+            text:'缩小',
+            callback: function () {
+                map.zoomOut();
+            }
+        }
+    ];
+for(var i = 0; i < txtMenuItem.length; i++){
+    menu.addItem(new BMapGL.MenuItem(               // 定义菜单项实例
+        txtMenuItem[i].text,                        // 传入菜单项的显示文本
+        txtMenuItem[i].callback,                    // 传入菜单项的回调函数
+        {
+            width: 300,                             // 指定菜单项的宽度
+            id: 'menu' + i                          // 指定菜单项dom的id
+        }
+    ));
+}
+3给地图添加右键菜单
+使用addContextMenu方法给地图添加右键菜单。
+
+map.addContextMenu(menu);                           // 给地图添加右键菜单

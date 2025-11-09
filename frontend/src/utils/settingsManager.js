@@ -2,7 +2,7 @@
 class SettingsManager {
   constructor() {
     this.settings = {
-      alibabaCloudApiKey: '',
+      dashscopeApiKey: '',
       supabaseUrl: '',
       supabaseKey: '',
       baiduMapsApiKey: '',
@@ -58,7 +58,7 @@ class SettingsManager {
   // Clear all settings
   clearSettings() {
     this.settings = {
-      alibabaCloudApiKey: '',
+      dashscopeApiKey: '',
       supabaseUrl: '',
       supabaseKey: '',
       baiduMapsApiKey: '',

@@ -1,5 +1,5 @@
 // API service to communicate with the backend
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 class ApiService {
   // Generate travel plan using AI
@@ -9,7 +9,8 @@ class ApiService {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ request }),
+      // 直接传递request对象，它已经包含了apiKey字段
+      body: JSON.stringify(request),
     });
 
     if (!response.ok) {

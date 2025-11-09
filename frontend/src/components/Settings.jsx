@@ -5,7 +5,7 @@ import aiTravelPlanner from '../utils/aiTravelPlanner';
 
 const Settings = ({ onClose }) => {
   const [settings, setSettings] = useState({
-    alibabaCloudApiKey: '',
+    dashscopeApiKey: '',
     supabaseUrl: '',
     supabaseKey: '',
     baiduMapsApiKey: '',
@@ -62,8 +62,8 @@ const Settings = ({ onClose }) => {
       settingsManager.updateSettings(updatedSettings);
       
       // Update the services with new settings
-      if (updatedSettings.alibabaCloudApiKey) {
-        aiTravelPlanner.setApiKey(updatedSettings.alibabaCloudApiKey);
+      if (updatedSettings.dashscopeApiKey) {
+        aiTravelPlanner.setApiKey(updatedSettings.dashscopeApiKey);
       }
       
       if (updatedSettings.supabaseUrl && updatedSettings.supabaseKey) {
@@ -82,7 +82,7 @@ const Settings = ({ onClose }) => {
     if (window.confirm('Are you sure you want to clear all settings?')) {
       settingsManager.clearSettings();
       const clearedSettings = {
-        alibabaCloudApiKey: '',
+        dashscopeApiKey: '',
         supabaseUrl: '',
         supabaseKey: '',
         baiduMapsApiKey: '',
@@ -103,35 +103,29 @@ const Settings = ({ onClose }) => {
           <button className="close-button" onClick={onClose}>×</button>
         </div>
         
-        {saveStatus && (
-          <div className={`save-status ${saveStatus.includes('success') ? 'success' : 'error'}`}>
-            {saveStatus}
-          </div>
-        )}
-        
         <div className="settings-form">
           <div className="setting-group">
-            <h3>Alibaba Cloud API</h3>
+            <h3>DashScope API</h3>
             <div className="form-group">
-              <label>API Key</label>
+              <label>API密钥</label>
               <div className="input-with-toggle">
                 <input
                   type={showApiKeys ? "text" : "password"}
-                  name="alibabaCloudApiKey"
-                  value={settings.alibabaCloudApiKey}
+                  name="dashscopeApiKey"
+                  value={settings.dashscopeApiKey}
                   onChange={handleInputChange}
-                  placeholder="Enter your Alibaba Cloud API Key"
+                  placeholder="Enter your DashScope API Key"
                 />
                 <button 
                   type="button" 
                   onClick={() => setShowApiKeys(!showApiKeys)}
                   className="toggle-visibility"
                 >
-                  {showApiKeys ? 'Hide' : 'Show'}
+                  {showApiKeys ? '隐藏' : '显示'}
                 </button>
               </div>
               <p className="help-text">
-                Get your API key from Alibaba Cloud Dashboard
+                Get your API key from DashScope Platform
               </p>
             </div>
           </div>
@@ -182,7 +176,7 @@ const Settings = ({ onClose }) => {
                   name="baiduMapsApiKey"
                   value={settings.baiduMapsApiKey}
                   onChange={handleInputChange}
-                  placeholder="Enter your Baidu Maps API Key"
+                  placeholder="输入您的百度地图API密钥"
                 />
                 <button 
                   type="button" 
@@ -193,21 +187,21 @@ const Settings = ({ onClose }) => {
                 </button>
               </div>
               <p className="help-text">
-                Get your API key from Baidu Maps Developer Console
+                请从百度地图开发者控制台获取API密钥
               </p>
             </div>
           </div>
           
           <div className="setting-group">
-            <h3>iFlytek Speech Recognition</h3>
+            <h3>讯飞语音识别</h3>
             <div className="form-group">
-              <label>App ID</label>
+              <label>应用ID</label>
               <input
                 type="text"
                 name="iflytekAppId"
                 value={settings.iflytekAppId}
                 onChange={handleInputChange}
-                placeholder="Enter your iFlytek App ID"
+                placeholder="输入您的讯飞应用ID"
               />
             </div>
             <div className="form-group">
@@ -218,7 +212,7 @@ const Settings = ({ onClose }) => {
                   name="iflytekApiKey"
                   value={settings.iflytekApiKey}
                   onChange={handleInputChange}
-                  placeholder="Enter your iFlytek API Key"
+                  placeholder="输入您的讯飞API密钥"
                 />
                 <button 
                   type="button" 
@@ -229,19 +223,25 @@ const Settings = ({ onClose }) => {
                 </button>
               </div>
               <p className="help-text">
-                Get your credentials from iFlytek Developer Platform
+                请从讯飞开发者平台获取凭证
               </p>
             </div>
           </div>
           
           <div className="settings-actions">
             <button onClick={handleSave} className="save-button">
-              Save Settings
+              保存设置
             </button>
             <button onClick={handleClear} className="clear-button">
-              Clear All
+              清空所有
             </button>
           </div>
+          
+          {saveStatus && (
+            <div className={`save-status ${saveStatus.includes('success') ? 'success' : 'error'}`}>
+              {saveStatus}
+            </div>
+          )}
         </div>
       </div>
     </div>
