@@ -1,285 +1,184 @@
-# AI Travel Planner
+# AI 旅行规划助手
 
-A web-based AI travel planner that helps users create personalized travel itineraries using voice input and AI technology.
+一款基于 AI 技术的智能旅行规划工具，帮助用户轻松创建个性化旅行行程，支持语音输入、预算管理和多设备同步。
 
-## 🌟 Features
+## ✨ 核心功能
 
-- **🎤 Voice-Based Planning**: Describe your travel plans using voice recognition
-- **🤖 AI-Powered Itineraries**: Generate detailed travel plans with AI assistance
-- **💰 Budget Tracking**: Manage your travel expenses and stay within budget
-- **🗺️ Interactive Maps**: Visualize your travel route and destinations
-- **☁️ Cloud Sync**: Access your plans from any device
-- **🔐 User Authentication**: Securely save and manage multiple travel plans
+- **🎤 语音规划**：通过语音识别快速描述旅行需求
+- **🤖 AI 行程生成**：智能生成详细的多日旅行计划
+- **💰 预算管理**：实时跟踪支出并提供预算提醒
+- **🗺️ 交互式地图**：可视化旅行路线和目的地
+- **☁️ 云端同步**：多设备无缝访问和同步旅行计划
+- **🔐 用户认证**：安全保存和管理多个旅行计划
 
-## 🛠️ Tech Stack
+## 🛠️ 技术栈
 
-- **Frontend**: React with Vite
-- **Backend**: Node.js with Express
-- **Database**: Custom backend API (with Supabase integration ready)
-- **Voice Recognition**: Web Speech API (with iFlytek support)
-- **Maps**: Baidu Maps API (placeholder implemented)
-- **AI**: Alibaba Cloud Bailian API (integrated via backend)
-- **Styling**: CSS3 with responsive design
+- **前端**：React + Vite + CSS3
+- **后端**：Node.js + Express
+- **数据库**：Supabase
+- **语音识别**：Web Speech API + 讯飞接口
+- **地图服务**：百度地图 API
+- **AI 服务**：阿里云百炼 API
+- **部署**：Docker + Docker Compose
 
-## 📁 Project Structure
+## 📁 项目结构
 
 ```
 AI_Travel_Planner/
-├── frontend/                 # React frontend application
-│   ├── public/               # Static assets
-│   ├── src/                  # Source code
-│   │   ├── components/       # React components
-│   │   ├── utils/            # Utility functions
-│   │   ├── services/         # API services
-│   │   ├── App.jsx           # Main application component
-│   │   └── main.jsx          # Entry point
-│   ├── index.html            # HTML template
-│   └── vite.config.js        # Vite configuration
-├── backend/                  # Node.js backend server
-│   ├── server.js             # Main server file
-│   └── package.json          # Backend dependencies
-├── docs/                     # Documentation
-├── README.md                 # Project overview (this file)
-└── .gitignore                # Git ignore file
+├── frontend/                 # React 前端应用
+│   ├── src/                  # 源代码
+│   │   ├── components/       # React 组件
+│   │   ├── services/         # API 服务
+│   │   ├── utils/            # 工具函数
+│   │   ├── App.jsx           # 主应用组件
+│   │   └── main.jsx          # 入口文件
+│   └── vite.config.js        # Vite 配置
+├── backend/                  # Node.js 后端服务
+│   ├── server.js             # 主服务器文件
+│   ├── create-table-sql.sql  # 数据库表结构
+│   └── init-supabase.js      # Supabase 初始化
+├── docs/                     # 项目文档
+├── docker-compose.yml        # Docker 编排配置
+└── README.md                 # 项目说明文档
 ```
 
-## 🚀 Getting Started
+## 🚀 快速开始
 
-### Prerequisites
+### 环境要求
 
-- Node.js (version 14 or higher)
-- npm (version 6 or higher)
+- Node.js (v14 或更高版本)
+- npm (v6 或更高版本)
+- Docker (可选，用于容器化部署)
 
-### Installation
+### 本地开发
 
-1. **Clone the repository:**
+1. **克隆项目**
    ```bash
    git clone <repository-url>
    cd AI_Travel_Planner
    ```
 
-2. **Install frontend dependencies:**
+2. **安装依赖**
    ```bash
+   # 前端依赖
    cd frontend
    npm install
+   cd ..
+   
+   # 后端依赖
+   cd backend
+   npm install
+   cd ..
    ```
 
-3. **Install backend dependencies:**
+3. **配置环境变量**
    ```bash
+   # 前端配置
+   cd frontend
+   cp .env.example .env
+   # 编辑 .env 文件，填入实际 API 密钥
+   
+   # 后端配置
    cd ../backend
-   npm install
-   ```
-
-### Environment Configuration
-
-The project includes example environment files that you need to copy and configure with your own API keys.
-
-#### Frontend Environment Configuration
-
-1. Copy the example file:
-   ```bash
-   cd frontend
    cp .env.example .env
+   # 编辑 .env 文件，填入实际 API 密钥
    ```
 
-2. Edit the `.env` file and replace the placeholder values with your actual API keys.
-
-#### Backend Environment Configuration
-
-1. Copy the example file:
+4. **启动开发服务器**
    ```bash
-   cd backend
-   cp .env.example .env
-   ```
-
-2. Edit the `.env` file and replace the placeholder values with your actual API keys.
-
-Refer to the [Setup Guide](docs/setup.md) for detailed configuration instructions.
-
-### Running the Application
-
-1. **Start the backend server:**
-   ```bash
-   cd backend
+   # 启动后端 (在 backend 目录)
    npm run dev
-   ```
-   The backend will start on port 3001.
-
-2. **Start the frontend development server:**
-   ```bash
-   cd frontend
+   # 后端将在 3001 端口运行
+   
+   # 启动前端 (在 frontend 目录)
    npm run dev
+   # 前端将在 5173 端口运行
    ```
-   The frontend will start on port 5173.
 
-3. **Open your browser** and navigate to `http://localhost:5173`
+5. **访问应用**：浏览器打开 `http://localhost:5173`
 
-## 🐳 Docker Deployment
+### Docker 部署
 
-This project includes Docker configuration files for easy deployment. You can run the entire application using Docker Compose.
+使用 Docker Compose 快速部署整个应用：
 
-### Prerequisites for Docker Deployment
-
-- Docker Engine (version 19.03 or higher)
-- Docker Compose (version 1.27 or higher)
-
-### Running with Docker Compose
-
-1. **Build and start the services:**
+1. **启动服务**
    ```bash
    docker-compose up --build
    ```
 
-2. **Access the application:**
-   - Frontend: http://localhost
-   - Backend API: http://localhost:3001
+2. **访问应用**
+   - 前端：http://localhost
+   - 后端 API：http://localhost:3001
 
-3. **Stop the services:**
+3. **停止服务**
    ```bash
    docker-compose down
    ```
 
-### Building Docker Images
+## ⚙️ 关键配置
 
-You can build the Docker images separately using the provided scripts:
+### API 密钥配置
 
-**On Linux/Mac:**
-```bash
-./build-docker-images.sh
-```
+应用需要以下 API 密钥才能完全运行：
 
-**On Windows:**
-```powershell
-.\build-docker-images.ps1
-```
+1. **阿里云**：用于 AI 行程生成
+2. **讯飞**：用于语音识别服务
+3. **百度地图**：用于地图可视化
+4. **Supabase**：用于数据存储和同步
 
-Or build manually:
-```bash
-# Build backend
-cd backend
-docker build -t ai-travel-planner-backend:latest .
+所有 API 密钥通过环境变量配置，确保安全管理。详细配置指南请参考 [设置文档](docs/setup.md)。
 
-# Build frontend
-cd ../frontend
-docker build -t ai-travel-planner-frontend:latest .
-```
+### 数据库配置
 
-### Docker Images
+项目使用 Supabase 作为数据库服务。首次设置时，需执行以下步骤：
 
-The project includes Dockerfiles for both frontend and backend services:
+1. 创建 Supabase 项目
+2. 在项目中执行 `create-table-sql.sql` 中的 SQL 语句
+3. 在 `.env` 文件中配置 Supabase URL 和 API 密钥
 
-- **Frontend**: React application served by Nginx
-- **Backend**: Node.js Express server
+## 🔍 主要功能说明
 
-### Environment Configuration for Docker
+### 1. AI 行程规划
+- 支持通过语音或文本描述旅行需求
+- AI 自动生成详细行程，包括：
+  - 每日活动安排
+  - 住宿推荐
+  - 交通方案
+  - 餐饮建议
+  - 预算估算
 
-When running with Docker, you can configure environment variables using a `.env` file in the root directory:
+### 2. 预算管理
+- 实时记录和分类旅行支出
+- 可视化消费模式
+- 超出预算提醒
 
-```env
-# Backend environment variables
-PORT=3001
-ALIBABA_CLOUD_ACCESS_KEY_ID=your_alibaba_cloud_access_key_id
-ALIBABA_CLOUD_ACCESS_KEY_SECRET=your_alibaba_cloud_access_key_secret
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_KEY=your_supabase_api_key
-BAIDU_MAPS_API_KEY=your_baidu_maps_api_key
+### 3. 多设备同步
+- 旅行计划自动同步至云端
+- 支持在不同设备上查看和编辑
+- 离线编辑，在线同步
 
-# Frontend environment variables
-REACT_APP_API_URL=http://localhost:3001
-REACT_APP_ALIBABA_CLOUD_API_KEY=your_alibaba_cloud_api_key
-REACT_APP_SUPABASE_URL=your_supabase_project_url
-REACT_APP_SUPABASE_KEY=your_supabase_api_key
-REACT_APP_BAIDU_MAPS_API_KEY=your_baidu_maps_api_key
-REACT_APP_IFLYTEK_APP_ID=your_iflytek_app_id
-REACT_APP_IFLYTEK_API_KEY=your_iflytek_api_key
-```
+## 🔒 安全措施
 
-## 🔧 Configuration
+- 用户认证与授权保护
+- API 密钥通过环境变量管理
+- 数据传输使用 HTTPS
+- 本地数据缓存与云端同步双重保障
 
-To use the full functionality of the application, you'll need to configure API keys:
+## 🤝 贡献指南
 
-1. **Frontend Configuration:**
-   Create a `.env` file in the `frontend` directory with your API keys.
+欢迎提交 Issue 和 Pull Request！贡献流程：
 
-2. **Backend Configuration:**
-   Create a `.env` file in the `backend` directory with your API keys.
+1. Fork 项目仓库
+2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
+3. 提交更改 (`git commit -m 'Add some amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 创建 Pull Request
 
-Refer to the [Setup Guide](docs/setup.md) for detailed configuration instructions.
+## 📜 许可证
 
-## 🎯 Core Functionality
+本项目采用 MIT 许可证 - 详情请查看 [LICENSE](LICENSE) 文件
 
-### 1. Intelligent Trip Planning
-- Use voice or text to describe your travel needs
-- AI generates a complete itinerary including:
-  - Day-by-day activities
-  - Accommodation recommendations
-  - Transportation options
-  - Restaurant suggestions
-  - Budget estimates
+## 💬 支持与反馈
 
-### 2. Expense Management
-- Track travel expenses in real-time
-- Categorize spending (food, accommodation, transport, etc.)
-- Visualize spending patterns
-- Stay within your budget with alerts
-
-### 3. User Management
-- Secure user registration and login
-- Save multiple travel plans
-- Access plans from any device
-- Privacy-focused data handling
-
-## 📱 User Interface
-
-The application features a modern, responsive design that works on:
-- Desktop computers
-- Tablets
-- Mobile devices
-
-Key UI components:
-- Voice input controls
-- Interactive map visualization
-- Detailed itinerary display
-- Expense tracking dashboard
-- User authentication system
-
-## 🔄 Data Synchronization
-
-Travel plans are automatically synchronized across devices when:
-- Changes are made to an itinerary
-- New expenses are added
-- Plans are updated or deleted
-
-## 🔒 Security
-
-- User data is securely stored
-- API keys are managed through environment variables
-- Authentication protects user-specific data
-- HTTPS recommended for production deployment
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For issues and feature requests, please:
-1. Check the documentation
-2. Review existing issues
-3. Create a new issue with detailed information
-
-## 🙏 Acknowledgments
-
-- Alibaba Cloud for AI services
-- Baidu Maps for geolocation services
-- iFlytek for voice recognition technology
-- Supabase for database solutions
-- React and Vite communities for excellent tools
+- 有问题请提交 [Issue](https://github.com/yourusername/AI_Travel_Planner/issues)
+- 功能建议可通过 Pull Request 或 Issue 提出
