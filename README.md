@@ -58,12 +58,12 @@ docker run -p 8080:80 -p 3001:3001 crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr
 docker run -p 8080:80 -p 3001:3001 ghcr.io/lzzz0001/travel_planner:latest
 ```
 
-配置API KEY步骤：
+### 🔧 配置API KEY步骤
 1. 启动容器（如上命令所示）
 2. 访问应用：打开浏览器访问 http://localhost:8080
 3. 点击右上角的设置按钮
 4. 输入您的Supabase URL、API密钥等配置
-5. 点击保存，然后一定要记得点击最上面的刷新状态，确保配置生效。
+5. 点击保存，然后**一定要记得**点击最上面的刷新状态，确保配置生效。
 
 使用命名卷 `travel_planner_config` 确保配置在容器重启后仍然保留。
 
