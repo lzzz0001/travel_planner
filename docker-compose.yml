@@ -1,7 +1,15 @@
-version: '3.8'
+version: '3'
 
 services:
-  # Frontend service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+
   frontend:
     build:
       context: ./frontend
@@ -10,28 +18,3 @@ services:
       - "80:80"
     depends_on:
       - backend
-    environment:
-      - REACT_APP_API_URL=http://backend:3001/api
-    networks:
-      - app-network
-
-  # Backend service
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
-      - "3001:3001"
-    environment:
-      - PORT=3001
-      - NODE_ENV=production
-    networks:
-      - app-network
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-
-# Define a network for services to communicate
-networks:
-  app-network:
-    driver: bridge

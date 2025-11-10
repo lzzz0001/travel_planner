@@ -21,8 +21,25 @@ class ApiService {
   }
 
   // Get all travel plans
-  async getTravelPlans() {
-    const response = await fetch(`${API_BASE_URL}/travel-plans`);
+  async getTravelPlans(userId = 'anonymous') {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    
+    // 如果提供了用户ID，添加到请求头中
+    if (userId && userId !== 'anonymous') {
+      headers['X-User-ID'] = userId;
+    }
+    
+    const url = new URL(`${API_BASE_URL}/travel-plans`);
+    // 同时在查询参数中也添加用户ID作为后备
+    if (userId) {
+      url.searchParams.append('userId', userId);
+    }
+    
+    const response = await fetch(url, {
+      headers: headers
+    });
 
     if (!response.ok) {
       throw new Error(`Failed to fetch travel plans: ${response.statusText}`);

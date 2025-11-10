@@ -1,28 +1,23 @@
-# Use Node.js 16 as the base image
+# 使用Node.js官方镜像作为基础镜像
 FROM node:16-alpine
 
-# Set the working directory
+# 设置工作目录
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# 复制package.json和package-lock.json
 COPY package*.json ./
 
-# Install dependencies
+# 安装依赖
 RUN npm ci --only=production
 
-# Copy the rest of the application code
+# 复制应用代码
 COPY . .
 
-# Expose the port the app runs on
+# 设置环境变量
+ENV NODE_ENV=production
+
+# 暴露端口
 EXPOSE 3001
 
-# Create a non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
-
-# Change ownership of the app directory to the nodejs user
-RUN chown -R nextjs:nodejs /app
-USER nextjs
-
-# Start the application
-CMD ["npm", "start"]
+# 启动应用
+CMD ["node", "server.js"]

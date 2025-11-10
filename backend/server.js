@@ -304,8 +304,12 @@ app.post('/api/generate-plan', async (req, res) => {
       });
     }
     
-    // 添加ID
+    // 添加ID和用户ID
     travelPlan.id = 'plan-' + Date.now();
+    // 从请求头或请求体获取用户ID，如果没有则默认为anonymous
+    const userId = req.headers['x-user-id'] || req.body.userId || 'anonymous';
+    travelPlan.userId = userId;
+    
     // 保存到历史记录
     if (typeof travelPlans !== 'undefined' && Array.isArray(travelPlans)) {
       travelPlans.push(travelPlan);
@@ -322,38 +326,40 @@ app.post('/api/generate-plan', async (req, res) => {
   }
 });
 
-// Get all travel plans
+// Get all travel plans for a specific user
 app.get('/api/travel-plans', async (req, res) => {
   try {
-    console.log('获取所有旅行计划');
+    // 从请求头或查询参数中获取用户ID，优先使用请求头
+    const userId = req.headers['x-user-id'] || req.query.userId || 'anonymous';
+    console.log(`获取用户 ${userId} 的旅行计划`);
     
-    // 如果Supabase可用，优先从Supabase获取
+    // 如果Supabase可用，优先从Supabase获取用户的旅行计划
     if (supabaseClient) {
       const { data, error } = await supabaseClient
         .from('travel_plans')
-        .select('*');
+        .select('*')
+        .eq('userId', userId);
       
       if (error) {
-        console.error('Error fetching from Supabase:', error);
-        // 重要：即使Supabase失败，也返回内存中的数据，而不是空数组
-        console.log(`返回内存中的计划: ${travelPlans.length} 个`);
-        return res.json(travelPlans);
+        console.error('Error fetching user plans from Supabase:', error);
+        // 如果Supabase失败，从内存中过滤
+        const userPlans = travelPlans.filter(plan => plan.userId === userId);
+        return res.json(userPlans);
       } else {
-        console.log(`Successfully fetched from Supabase: ${data.length} plans`);
-        // 更新内存中的数据以保持同步
-        travelPlans = data;
+        console.log(`Successfully fetched user plans from Supabase: ${data.length} plans`);
         return res.json(data);
       }
     }
     
-    // 如果Supabase不可用，返回内存中的数据
-    console.log(`返回内存中的计划: ${travelPlans.length} 个`);
-    res.json(travelPlans);
+    // 如果Supabase不可用，从内存中过滤
+    const userPlans = travelPlans.filter(plan => plan.userId === userId);
+    res.json(userPlans);
   } catch (error) {
-    console.error('Error fetching travel plans:', error);
-    // 错误情况下返回内存中的数据，确保前端不会丢失数据
-    console.log(`返回内存中的计划: ${travelPlans.length} 个`);
-    res.json(travelPlans);
+    console.error('Error fetching user travel plans:', error);
+    // 错误情况下尝试从内存中获取用户的计划
+    const userId = req.headers['x-user-id'] || req.query.userId || 'anonymous';
+    const userPlans = travelPlans.filter(plan => plan.userId === userId);
+    res.json(userPlans);
   }
 });
 

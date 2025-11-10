@@ -151,18 +151,30 @@ class TravelPlannerClient {
 
   // Save a travel plan
   async saveTravelPlan(plan) {
+    // 确保plan是对象
+    if (!plan || typeof plan !== 'object') {
+      console.error('Invalid plan object:', plan);
+      return null;
+    }
+    
+    // 创建带有用户ID的计划对象
+    const planWithUser = {
+      ...plan,
+      userId: this.user ? this.user.id : 'anonymous'
+    };
+    
     // 不再强制要求用户登录，允许未登录用户保存旅行计划到本地
     if (!this.user) {
       console.log('User not authenticated, saving plan to local cache only');
       // 生成一个临时ID
-      const planWithId = { ...plan, id: 'local-plan-' + Date.now() };
+      const planWithId = { ...planWithUser, id: 'local-plan-' + Date.now() };
       this.travelPlans.push(planWithId);
       return planWithId;
     }
 
     // No email confirmation required anymore
     try {
-      const planWithId = await apiService.saveTravelPlan(plan);
+      const planWithId = await apiService.saveTravelPlan(planWithUser);
       console.log('Saving travel plan for user:', this.user.id);
       
       // Add to local cache
@@ -172,7 +184,7 @@ class TravelPlannerClient {
     } catch (error) {
       console.error('Error saving travel plan:', error);
       // 发生错误时，保存到本地缓存
-      const planWithId = { ...plan, id: 'local-error-plan-' + Date.now() };
+      const planWithId = { ...planWithUser, id: 'local-error-plan-' + Date.now() };
       this.travelPlans.push(planWithId);
       return planWithId;
     }
@@ -188,7 +200,8 @@ class TravelPlannerClient {
 
     // No email confirmation required anymore
     try {
-      const plans = await apiService.getTravelPlans();
+      // 传递用户ID给API服务
+      const plans = await apiService.getTravelPlans(this.user.id);
       console.log('Retrieving travel plans for user:', this.user.id);
       this.travelPlans = plans;
       return plans;
@@ -284,8 +297,8 @@ class TravelPlannerClient {
     console.log('Syncing travel plans with backend for user:', this.user.id);
     
     try {
-      // 尝试从后端获取最新数据
-      const latestPlans = await apiService.getTravelPlans();
+      // 尝试从后端获取最新数据，传递用户ID
+      const latestPlans = await apiService.getTravelPlans(this.user.id);
       this.travelPlans = latestPlans;
       return latestPlans;
     } catch (error) {

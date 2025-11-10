@@ -1,0 +1,38 @@
+name: Build and Push Unified Docker Image to ACR
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # 登录到阿里云容器镜像服务
+      - name: Login to Alibaba Cloud Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.ALI_REGISTRY }}
+          username: ${{ secrets.ALI_REGISTRY_USERNAME }}
+          password: ${{ secrets.ALI_REGISTRY_PASSWORD }}
+
+      # 构建并推送统一镜像到阿里云
+      - name: Build and push unified image to ACR
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: ${{ github.event_name == 'push' }}
+          tags: |
+            ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_REGISTRY_NAMESPACE }}/travel_planner:latest
+            ${{ secrets.ALI_REGISTRY }}/${{ secrets.ALI_REGISTRY_NAMESPACE }}/travel_planner:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

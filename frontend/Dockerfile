@@ -1,32 +1,32 @@
-# Use Node.js 16 as the base image for building
-FROM node:16-alpine AS builder
+# 构建阶段
+FROM node:16-alpine as build
 
-# Set the working directory
+# 设置工作目录
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# 复制package.json和package-lock.json
 COPY package*.json ./
 
-# Install dependencies
+# 安装依赖
 RUN npm ci
 
-# Copy the rest of the application code
+# 复制应用代码
 COPY . .
 
-# Build the application
+# 构建应用
 RUN npm run build
 
-# Use nginx as the production server
+# 生产阶段
 FROM nginx:alpine
 
-# Copy the built application to nginx's html directory
-COPY --from=builder /app/dist /usr/share/nginx/html
+# 复制构建产物到nginx
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+# 复制nginx配置
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80
+# 暴露端口
 EXPOSE 80
 
-# Start nginx
+# 启动nginx
 CMD ["nginx", "-g", "daemon off;"]
