@@ -23,7 +23,7 @@
 #### 运行镜像
 
 ```bash
-docker run -p 8080:80 -p 3001:3001 \n  -e SUPABASE_URL="你的Supabase URL" \n  -e SUPABASE_KEY="你的Supabase密钥" \n  -e ALI_BAILIAN_API_KEY="你的阿里云百炼API密钥" \n  -e IFLYTEK_APPID="你的讯飞AppID" \n  -e BAIDU_MAP_KEY="你的百度地图API密钥" \n  travel_planner:latest
+docker run -p 8080:80 -p 3001:3001 travel_planner:latest
 ```
 
 ### ☁️ 从容器仓库拉取镜像
@@ -107,15 +107,74 @@ docker tag ghcr.io/[你的GitHub用户名]/ai_travel_planner:latest travel_plann
 
 ## 📋 环境变量配置
 
-应用需要配置以下环境变量才能正常运行：
+应用需要以下环境变量才能正常运行，尤其是Supabase凭据是必须的，否则会使用内存存储（重启后数据丢失）：
 
-| 环境变量 | 说明 | 必填 |
-|---------|------|------|
-| SUPABASE_URL | Supabase 项目 URL | 是 |
-| SUPABASE_KEY | Supabase API 密钥 | 是 |
+| 环境变量 | 描述 | 是否必需 |
+|---------|------|---------|
+| SUPABASE_URL | Supabase 项目 URL | **是** |
+| SUPABASE_KEY | Supabase API 密钥 | **是** |
 | ALI_BAILIAN_API_KEY | 阿里云百炼 API 密钥 | 是 |
 | IFLYTEK_APPID | 讯飞开放平台 AppID | 是 |
 | BAIDU_MAP_KEY | 百度地图 API 密钥 | 是 |
+
+### 设置环境变量的方法
+
+#### 方法1：通过Docker命令行传递
+
+```bash
+docker run -p 8080:80 -p 3001:3001 \
+  -e SUPABASE_URL=your_actual_supabase_url \
+  -e SUPABASE_KEY=your_actual_supabase_key \
+  -e ALI_BAILIAN_API_KEY=your_actual_ali_bailian_api_key \
+  -e IFLYTEK_APPID=your_actual_iflytek_appid \
+  -e BAIDU_MAP_KEY=your_actual_baidu_map_key \
+  travel_planner:latest
+```
+
+#### 方法2：使用Docker Compose
+
+修改 `docker-compose.yml` 文件中的环境变量值，然后运行：
+
+```bash
+docker-compose up -d
+```
+
+#### 方法3：使用环境变量文件（推荐）
+
+1. **使用配置脚本（最简单）**：
+   - Windows系统：
+     ```powershell
+     .\\setup_env.ps1
+     ```
+   - Linux/Mac系统：
+     ```bash
+     chmod +x setup_env.sh
+     ./setup_env.sh
+     ```
+
+2. **手动配置**：
+   - 复制 `.env.example` 文件创建 `.env` 文件：
+     ```bash
+     cp backend/.env.example backend/.env
+     ```
+   - 编辑 `.env` 文件，填入实际的API密钥
+
+3. **验证配置**：运行环境变量测试脚本检查配置是否正确：
+   ```bash
+   node test_env.js
+   ```
+
+4. 使用以下命令运行容器并挂载环境变量文件：
+   ```bash
+   docker run -p 8080:80 -p 3001:3001 \
+     -v $(pwd)/backend/.env:/app/backend/.env:ro \
+     travel_planner:latest
+   ```
+   
+   或者取消 `docker-compose.yml` 中卷挂载的注释，然后使用Docker Compose运行：
+   ```bash
+   docker-compose up -d
+   ```
 
 ## 🏗️ 构建 Docker 镜像
 

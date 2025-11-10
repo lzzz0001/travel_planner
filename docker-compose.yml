@@ -1,20 +1,25 @@
 version: '3'
 
 services:
-  backend:
+  # 使用统一镜像
+  travel_planner:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     ports:
+      - "8080:80"
       - "3001:3001"
     environment:
       - NODE_ENV=production
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
+      # Supabase 配置 - 请替换为实际的值（必须提供）
+      - SUPABASE_URL=your_supabase_project_url
+      - SUPABASE_KEY=your_supabase_api_key
+      # 阿里云百炼API配置 - 请替换为实际的值
+      - ALI_BAILIAN_API_KEY=your_ali_bailian_api_key
+      # 百度地图API配置 - 请替换为实际的值
+      - BAIDU_MAP_KEY=your_baidu_map_key
+      # 讯飞语音识别API配置 - 请替换为实际的值
+      - IFLYTEK_APPID=your_iflytek_appid
+    # 可选：挂载环境变量文件（推荐）
+    # volumes:
+    #   - ./backend/.env:/app/backend/.env:ro
