@@ -9,7 +9,152 @@
 - **💰 预算管理**：实时跟踪支出并提供预算提醒
 - **🗺️ 交互式地图**：可视化旅行路线和目的地
 - **☁️ 云端同步**：多设备无缝访问和同步旅行计划
-- **🔐 用户认证**：安全保存和管理多个旅行计划
+
+## 🚀 快速开始 (使用 Docker 镜像)
+
+### 📦 使用本地构建的 Docker 镜像
+
+#### 前提条件
+- 已安装 Docker
+- 已构建项目镜像 (详见 [构建说明](#构建-docker-镜像))
+
+#### 运行镜像
+
+```bash
+docker run -p 8080:80 -p 3001:3001 \n  -e SUPABASE_URL="你的Supabase URL" \n  -e SUPABASE_KEY="你的Supabase密钥" \n  -e ALI_BAILIAN_API_KEY="你的阿里云百炼API密钥" \n  -e IFLYTEK_APPID="你的讯飞AppID" \n  -e BAIDU_MAP_KEY="你的百度地图API密钥" \n  travel_planner:latest
+```
+
+### ☁️ 从容器仓库拉取镜像
+
+#### 从阿里云容器镜像服务拉取
+
+1. **登录阿里云容器镜像服务**
+   ```bash
+   docker login crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com -u nick9438919947
+   ```
+
+2. **拉取镜像**
+   ```bash
+   docker pull crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com/my_reposiotory/travel_planner:latest
+   ```
+
+#### 从GitHub Container Registry拉取
+
+1. **登录GitHub Container Registry**
+   ```bash
+   docker login ghcr.io
+   # 使用你的GitHub用户名和个人访问令牌(PAT)登录
+   # 个人访问令牌需要有write:packages和read:packages权限
+   ```
+
+2. **拉取镜像**
+   ```bash
+   docker pull ghcr.io/[你的GitHub用户名]/ai_travel_planner:latest
+   # 例如：ghcr.io/nick9438919947/ai_travel_planner:latest
+   ```
+
+### 🚀 运行镜像
+
+使用从任一仓库拉取的镜像运行应用：
+
+```bash
+# 使用阿里云镜像
+ docker run -p 8080:80 -p 3001:3001 \
+   -e SUPABASE_URL="你的Supabase URL" \
+   -e SUPABASE_KEY="你的Supabase密钥" \
+   -e ALI_BAILIAN_API_KEY="你的阿里云百炼API密钥" \
+   -e IFLYTEK_APPID="你的讯飞AppID" \
+   -e BAIDU_MAP_KEY="你的百度地图API密钥" \
+   crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com/my_reposiotory/travel_planner:latest
+
+# 或者使用GitHub镜像
+ docker run -p 8080:80 -p 3001:3001 \
+   -e SUPABASE_URL="你的Supabase URL" \
+   -e SUPABASE_KEY="你的Supabase密钥" \
+   -e ALI_BAILIAN_API_KEY="你的阿里云百炼API密钥" \
+   -e IFLYTEK_APPID="你的讯飞AppID" \
+   -e BAIDU_MAP_KEY="你的百度地图API密钥" \
+   ghcr.io/[你的GitHub用户名]/ai_travel_planner:latest
+```
+
+### 📝 使用简短名称运行 (可选)
+
+```bash
+# 给镜像添加简短标签
+# 对于阿里云镜像
+docker tag crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com/my_reposiotory/travel_planner:latest travel_planner:latest
+
+# 或者对于GitHub镜像
+docker tag ghcr.io/[你的GitHub用户名]/ai_travel_planner:latest travel_planner:latest
+
+# 然后使用简短名称运行
+ docker run -p 8080:80 -p 3001:3001 \
+   -e SUPABASE_URL="你的Supabase URL" \
+   -e SUPABASE_KEY="你的Supabase密钥" \
+   -e ALI_BAILIAN_API_KEY="你的阿里云百炼API密钥" \
+   -e IFLYTEK_APPID="你的讯飞AppID" \
+   -e BAIDU_MAP_KEY="你的百度地图API密钥" \
+   travel_planner:latest
+```
+
+### 🔗 访问应用
+
+运行成功后，可以通过以下地址访问：
+- **前端应用**：http://localhost:8080
+- **后端API**：http://localhost:3001
+
+## 📋 环境变量配置
+
+应用需要配置以下环境变量才能正常运行：
+
+| 环境变量 | 说明 | 必填 |
+|---------|------|------|
+| SUPABASE_URL | Supabase 项目 URL | 是 |
+| SUPABASE_KEY | Supabase API 密钥 | 是 |
+| ALI_BAILIAN_API_KEY | 阿里云百炼 API 密钥 | 是 |
+| IFLYTEK_APPID | 讯飞开放平台 AppID | 是 |
+| BAIDU_MAP_KEY | 百度地图 API 密钥 | 是 |
+
+## 🏗️ 构建 Docker 镜像
+
+如果你想从源码构建镜像：
+
+1. **克隆仓库**
+   ```bash
+   git clone <repository-url>
+   cd AI_Travel_Planner
+   ```
+
+2. **构建镜像**
+   ```bash
+   docker build -t travel_planner:latest .
+   ```
+
+## 🐳 Docker Compose 部署
+
+使用 Docker Compose 进行本地开发或测试环境部署：
+
+```bash
+docker-compose up --build
+```
+
+## 🔧 常见问题
+
+### 端口占用问题
+
+如果遇到 80 端口被占用的情况（常见于 Windows IIS 服务），请使用其他端口，如 8080：
+
+```bash
+docker run -p 8080:80 -p 3001:3001 travel_planner:latest
+```
+
+### 镜像名称过长
+
+阿里云镜像默认名称较长，这是正常的 Docker 命名规范。可以使用 `docker tag` 命令添加简短标签。
+
+### API 密钥配置
+
+确保所有必要的 API 密钥都已正确配置。没有配置或配置错误的 API 会导致相应功能不可用。
 
 ## 🛠️ 技术栈
 
@@ -19,166 +164,7 @@
 - **语音识别**：Web Speech API + 讯飞接口
 - **地图服务**：百度地图 API
 - **AI 服务**：阿里云百炼 API
-- **部署**：Docker + Docker Compose
-
-## 📁 项目结构
-
-```
-AI_Travel_Planner/
-├── frontend/                 # React 前端应用
-│   ├── src/                  # 源代码
-│   │   ├── components/       # React 组件
-│   │   ├── services/         # API 服务
-│   │   ├── utils/            # 工具函数
-│   │   ├── App.jsx           # 主应用组件
-│   │   └── main.jsx          # 入口文件
-│   └── vite.config.js        # Vite 配置
-├── backend/                  # Node.js 后端服务
-│   ├── server.js             # 主服务器文件
-│   ├── create-table-sql.sql  # 数据库表结构
-│   └── init-supabase.js      # Supabase 初始化
-├── docs/                     # 项目文档
-├── docker-compose.yml        # Docker 编排配置
-└── README.md                 # 项目说明文档
-```
-
-## 🚀 快速开始
-
-### 环境要求
-
-- Node.js (v14 或更高版本)
-- npm (v6 或更高版本)
-- Docker (可选，用于容器化部署)
-
-### 本地开发
-
-1. **克隆项目**
-   ```bash
-   git clone <repository-url>
-   cd AI_Travel_Planner
-   ```
-
-2. **安装依赖**
-   ```bash
-   # 前端依赖
-   cd frontend
-   npm install
-   cd ..
-   
-   # 后端依赖
-   cd backend
-   npm install
-   cd ..
-   ```
-
-3. **配置环境变量**
-   ```bash
-   # 前端配置
-   cd frontend
-   cp .env.example .env
-   # 编辑 .env 文件，填入实际 API 密钥
-   
-   # 后端配置
-   cd ../backend
-   cp .env.example .env
-   # 编辑 .env 文件，填入实际 API 密钥
-   ```
-
-4. **启动开发服务器**
-   ```bash
-   # 启动后端 (在 backend 目录)
-   npm run dev
-   # 后端将在 3001 端口运行
-   
-   # 启动前端 (在 frontend 目录)
-   npm run dev
-   # 前端将在 5173 端口运行
-   ```
-
-5. **访问应用**：浏览器打开 `http://localhost:5173`
-
-### Docker 部署
-
-使用 Docker Compose 快速部署整个应用：
-
-1. **启动服务**
-   ```bash
-   docker-compose up --build
-   ```
-
-2. **访问应用**
-   - 前端：http://localhost
-   - 后端 API：http://localhost:3001
-
-3. **停止服务**
-   ```bash
-   docker-compose down
-   ```
-
-## ⚙️ 关键配置
-
-### API 密钥配置
-
-应用需要以下 API 密钥才能完全运行：
-
-1. **阿里云**：用于 AI 行程生成
-2. **讯飞**：用于语音识别服务
-3. **百度地图**：用于地图可视化
-4. **Supabase**：用于数据存储和同步
-
-所有 API 密钥通过环境变量配置，确保安全管理。详细配置指南请参考 [设置文档](docs/setup.md)。
-
-### 数据库配置
-
-项目使用 Supabase 作为数据库服务。首次设置时，需执行以下步骤：
-
-1. 创建 Supabase 项目
-2. 在项目中执行 `create-table-sql.sql` 中的 SQL 语句
-3. 在 `.env` 文件中配置 Supabase URL 和 API 密钥
-
-## 🔍 主要功能说明
-
-### 1. AI 行程规划
-- 支持通过语音或文本描述旅行需求
-- AI 自动生成详细行程，包括：
-  - 每日活动安排
-  - 住宿推荐
-  - 交通方案
-  - 餐饮建议
-  - 预算估算
-
-### 2. 预算管理
-- 实时记录和分类旅行支出
-- 可视化消费模式
-- 超出预算提醒
-
-### 3. 多设备同步
-- 旅行计划自动同步至云端
-- 支持在不同设备上查看和编辑
-- 离线编辑，在线同步
-
-## 🔒 安全措施
-
-- 用户认证与授权保护
-- API 密钥通过环境变量管理
-- 数据传输使用 HTTPS
-- 本地数据缓存与云端同步双重保障
-
-## 🤝 贡献指南
-
-欢迎提交 Issue 和 Pull Request！贡献流程：
-
-1. Fork 项目仓库
-2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 创建 Pull Request
 
 ## 📜 许可证
 
 本项目采用 MIT 许可证 - 详情请查看 [LICENSE](LICENSE) 文件
-
-## 💬 支持与反馈
-
-- 有问题请提交 [Issue](https://github.com/yourusername/AI_Travel_Planner/issues)
-- 功能建议可通过 Pull Request 或 Issue 提出

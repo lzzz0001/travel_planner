@@ -71,7 +71,7 @@ GitHub Actions工作流文件位于`.github/workflows/docker-build-push.yml`，�
 docker build -t travel_planner:latest .
 
 # 运行统一镜像
-docker run -p 80:80 -p 3001:3001 travel_planner:latest
+docker run -p 8080:80 -p 3001:3001 travel_planner:latest
 ```
 
 ## 步骤5：使用推送的镜像
