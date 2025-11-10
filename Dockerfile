@@ -37,6 +37,9 @@ RUN apk add --no-cache nginx
 # 创建必要的目录
 RUN mkdir -p /run/nginx /var/www/html /app/backend
 
+# 设置后端目录权限，确保可以写入配置文件
+RUN chmod -R 755 /app/backend
+
 # 复制后端依赖和代码
 COPY --from=backend-prepare /app/backend/node_modules /app/backend/node_modules
 COPY backend/ /app/backend/

@@ -18,6 +18,50 @@ import './components/Settings.css'
 import './components/TravelPlansManager.css'
 import './components/MapComponent.css'
 
+// 初始化函数：将本地设置同步到后端
+const syncSettingsToBackend = async () => {
+  try {
+    const savedSettings = settingsManager.getAllSettings();
+    
+    // 如果有Supabase配置，发送到后端
+    if (savedSettings.supabaseUrl && savedSettings.supabaseKey) {
+      console.log('尝试将本地设置同步到后端...');
+      
+      const response = await fetch('/api/settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          supabaseUrl: savedSettings.supabaseUrl,
+          supabaseKey: savedSettings.supabaseKey,
+          baiduMapsApiKey: savedSettings.baiduMapsApiKey,
+          iflytekAppId: savedSettings.iflytekAppId
+        })
+      });
+      
+      const data = await response.json();
+      console.log('后端设置同步结果:', data);
+    }
+  } catch (error) {
+    console.warn('无法同步设置到后端:', error.message);
+    // 静默失败，不影响应用启动
+  }
+};
+
+// 检查后端配置状态
+const checkBackendSettingsStatus = async () => {
+  try {
+    const response = await fetch('/api/settings/status');
+    const data = await response.json();
+    console.log('后端配置状态:', data);
+    return data;
+  } catch (error) {
+    console.warn('无法检查后端配置状态:', error.message);
+    return null;
+  }
+}
+
 function App() {
   const [travelRequest, setTravelRequest] = useState('')
   const [itinerary, setItinerary] = useState(null)
@@ -36,6 +80,11 @@ function App() {
     
     // In a real implementation, you would pass these settings to the backend
     console.log('Loaded settings:', settings);
+    
+    // 自动同步设置到后端
+    syncSettingsToBackend();
+    // 检查后端配置状态
+    checkBackendSettingsStatus();
     
     // 加载历史查询记录
     const savedQueries = localStorage.getItem('previousQueries');

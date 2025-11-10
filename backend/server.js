@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 // 添加fetch支持
 const fetch = require('node-fetch');
@@ -19,19 +21,176 @@ app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 const DASHSCOPE_API_KEY = process.env.DASHSCOPE_API_KEY || process.env.ALIBABA_CLOUD_ACCESS_KEY_SECRET;
 const DASHSCOPE_API_ENDPOINT = process.env.DASHSCOPE_API_ENDPOINT || 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
 
+// 配置保存文件路径
+const CONFIG_FILE = path.join(__dirname, 'config.json');
+
+// 加载保存的配置
+function loadSavedConfig() {
+  try {
+    if (fs.existsSync(CONFIG_FILE)) {
+      const configData = fs.readFileSync(CONFIG_FILE, 'utf8');
+      const savedConfig = JSON.parse(configData);
+      console.log('已加载保存的配置');
+      return savedConfig;
+    }
+  } catch (error) {
+    console.error('读取保存的配置失败:', error.message);
+  }
+  return {};
+}
+
+// 保存配置到文件
+function saveConfigToFile(config) {
+  try {
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+    console.log('配置已保存到文件');
+  } catch (error) {
+    console.error('保存配置失败:', error.message);
+  }
+}
+
+// 加载保存的配置（优先于环境变量）
+const savedConfig = loadSavedConfig();
+
 // 配置Supabase
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+let SUPABASE_URL = savedConfig.supabaseUrl || process.env.SUPABASE_URL;
+let SUPABASE_ANON_KEY = savedConfig.supabaseKey || process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY; // 兼容前端的supabaseKey
+let BAIDU_MAPS_API_KEY = savedConfig.baiduMapsApiKey || process.env.BAIDU_MAPS_API_KEY;
+let IFLYTEK_APP_ID = savedConfig.iflytekAppId || process.env.IFLYTEK_APP_ID;
 
 let supabaseClient = null;
 
 // 初始化Supabase客户端
-if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-  supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  console.log('Supabase client initialized successfully');
-} else {
-  console.warn('Supabase credentials not found, using in-memory storage (data will be lost on restart)');
+function initSupabaseClient(url, key) {
+  if (!url || !key) {
+    console.log('警告: 缺少有效的Supabase URL或Key');
+    supabaseClient = null;
+    return false;
+  }
+  
+  try {
+    console.log('正在初始化Supabase客户端...');
+    supabaseClient = createClient(url, key);
+    console.log('Supabase客户端初始化成功');
+    return true;
+  } catch (error) {
+    console.error('Supabase客户端初始化失败:', error.message);
+    supabaseClient = null;
+    return false;
+  }
 }
+
+// 初始初始化
+initSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// API端点：接收前端配置的环境变量
+app.post('/api/settings', async (req, res) => {
+  try {
+    console.log('收到设置更新请求:', { hasUrl: !!req.body.supabaseUrl, hasKey: !!req.body.supabaseKey });
+    
+    const { supabaseUrl, supabaseKey, baiduMapsApiKey, iflytekAppId } = req.body;
+    
+    // 验证输入
+    if (!supabaseUrl || !supabaseKey) {
+      console.warn('设置更新失败: 缺少必要的Supabase配置');
+      return res.status(400).json({ 
+        success: false, 
+        message: '缺少必要的Supabase URL或Key',
+        usingSupabase: false
+      });
+    }
+    
+    // 保存旧配置用于回滚
+    const oldUrl = SUPABASE_URL;
+    const oldKey = SUPABASE_ANON_KEY;
+    const oldSupabase = supabaseClient;
+    
+    // 更新环境变量
+    SUPABASE_URL = supabaseUrl;
+    SUPABASE_ANON_KEY = supabaseKey;
+    
+    // 更新Supabase客户端
+    const success = initSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    if (success) {
+      // 尝试验证连接是否正常工作
+      try {
+        // 执行简单的查询来验证连接
+        const { data, error } = await supabaseClient.from('profiles').select('*').limit(1);
+        if (error) {
+          console.warn('Supabase连接验证失败:', error.message);
+          // 连接验证失败，但保留配置（可能是数据库结构不同）
+          console.log('设置已保存，但连接验证遇到问题，可能需要检查数据库配置');
+        } else {
+          console.log('Supabase连接验证成功');
+        }
+      } catch (verifyError) {
+        console.warn('Supabase连接验证遇到错误:', verifyError.message);
+        // 验证错误不应阻止配置更新
+      }
+      
+      // 保存配置到文件，实现持久化
+      const configToSave = {
+        supabaseUrl: supabaseUrl,
+        supabaseKey: supabaseKey,
+        baiduMapsApiKey: baiduMapsApiKey || BAIDU_MAPS_API_KEY,
+        iflytekAppId: iflytekAppId || IFLYTEK_APP_ID
+      };
+      saveConfigToFile(configToSave);
+      
+      console.log('设置已成功更新并应用');
+      return res.status(200).json({
+        success: true,
+        message: 'Supabase配置更新成功并已保存，现在使用Supabase数据库存储',
+        usingSupabase: true,
+        configStatus: 'active',
+        configSaved: true
+      });
+    } else {
+      // 回滚到之前的配置
+      SUPABASE_URL = oldUrl;
+      SUPABASE_ANON_KEY = oldKey;
+      supabaseClient = oldSupabase;
+      
+      return res.status(400).json({
+        success: false,
+        message: 'Supabase配置无效，请检查URL和密钥',
+        usingSupabase: false,
+        configStatus: 'reverted'
+      });
+    }
+  } catch (error) {
+    console.error('更新设置时出现服务器错误:', error.stack);
+    return res.status(500).json({
+      success: false,
+      message: `更新配置时发生错误: ${error.message}`,
+      configStatus: 'error'
+    });
+  }
+  });
+  
+  // API端点：获取当前配置状态
+app.get('/api/settings/status', async (req, res) => {
+  try {
+    const status = {
+      success: true,
+      usingSupabase: supabaseClient !== null,
+      supabaseConfigured: !!SUPABASE_URL && !!SUPABASE_ANON_KEY,
+      message: supabaseClient ? 'Supabase已配置并正在使用' : '使用内存存储（重启后数据丢失）',
+      configSource: SUPABASE_URL === process.env.SUPABASE_URL ? '环境变量' : '前端配置',
+      supabaseUrlPreview: SUPABASE_URL ? SUPABASE_URL.substring(0, 20) + '...' : null
+    };
+    
+    console.log('返回配置状态:', { usingSupabase: status.usingSupabase, configured: status.supabaseConfigured });
+    res.json(status);
+  } catch (error) {
+    console.error('获取设置状态时出错:', error.stack);
+    res.status(500).json({
+      success: false,
+      message: `获取配置状态时发生错误: ${error.message}`
+    });
+  }
+});
 
 // 生成DashScope API请求头（OpenAI兼容模式）
 function generateApiHeaders(apiKey) {

@@ -89,7 +89,7 @@ docker tag crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com/my_reposio
 # 或者对于GitHub镜像
 docker tag ghcr.io/[你的GitHub用户名]/ai_travel_planner:latest travel_planner:latest
 
-# 然后使用简短名称运行
+# 然后使用简短名称运行 (传统方式，通过环境变量)
  docker run -p 8080:80 -p 3001:3001 \
    -e SUPABASE_URL="你的Supabase URL" \
    -e SUPABASE_KEY="你的Supabase密钥" \
@@ -98,6 +98,26 @@ docker tag ghcr.io/[你的GitHub用户名]/ai_travel_planner:latest travel_plann
    -e BAIDU_MAP_KEY="你的百度地图API密钥" \
    travel_planner:latest
 ```
+
+### 🔧 通过前端设置按钮配置API密钥
+
+现在您可以在运行镜像后，通过应用界面的设置按钮直接配置所有API密钥，无需在命令行中设置环境变量：
+
+```bash
+# 使用持久化卷运行，确保配置在容器重启后保留
+ docker run -p 8080:80 -p 3001:3001 \
+   -v travel_planner_config:/app/backend/config.json \
+   travel_planner:latest
+```
+
+配置步骤：
+1. 启动容器（如上命令所示）
+2. 访问应用：打开浏览器访问 http://localhost:8080
+3. 点击右上角的设置按钮
+4. 输入您的Supabase URL、API密钥等配置
+5. 点击保存，配置将自动持久化并应用
+
+使用命名卷 `travel_planner_config` 确保配置在容器重启后仍然保留。
 
 ### 🔗 访问应用
 

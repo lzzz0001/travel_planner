@@ -20,6 +20,10 @@ services:
       - BAIDU_MAP_KEY=your_baidu_map_key
       # 讯飞语音识别API配置 - 请替换为实际的值
       - IFLYTEK_APPID=your_iflytek_appid
-    # 可选：挂载环境变量文件（推荐）
-    # volumes:
-    #   - ./backend/.env:/app/backend/.env:ro
+    # 挂载卷以持久化配置文件
+    volumes:
+      - travel_planner_config:/app/backend/config.json
+
+# 定义命名卷
+volumes:
+  travel_planner_config:
