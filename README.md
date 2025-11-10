@@ -1,6 +1,6 @@
 # AI 旅行规划助手
 
-<!-- 触发Actions工作流测试 - 更新时间：2024-01-01 -->
+<!-- 触发Actions工作流测试 - 更新时间：2025-11-10 -->
 
 一款基于 AI 技术的智能旅行规划工具，帮助用户轻松创建个性化旅行行程，支持语音输入、预算管理和多设备同步。
 
@@ -23,7 +23,14 @@
 #### 运行镜像
 
 ```bash
-docker run -p 8080:80 -p 3001:3001 travel_planner:latest
+docker run -p 8080:80 -p 3001:3001 \
+    -v travel_planner_config:/app/backend/config.json \
+    ghcr.io/lzzzz0001/travel_planner:latest
+  
+  # 或使用特定版本
+  docker run -p 8080:80 -p 3001:3001 \
+    -v travel_planner_config:/app/backend/config.json \
+    ghcr.io/lzzzz0001/travel_planner:e80922441c086e97ce2b6a0af7f1bf0b12842737
 ```
 
 ### ☁️ 从容器仓库拉取镜像
@@ -32,7 +39,8 @@ docker run -p 8080:80 -p 3001:3001 travel_planner:latest
 
 1. **登录阿里云容器镜像服务**
    ```bash
-   docker login crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com -u nick9438919947
+   # 阿里云个人镜像仓库登录（仅仓库所有者需要，其他用户无需登录即可拉取公共镜像）
+   # docker login crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com -u [您的阿里云用户名]
    ```
 
 2. **拉取镜像**
@@ -51,66 +59,29 @@ docker run -p 8080:80 -p 3001:3001 travel_planner:latest
 
 2. **拉取镜像**
    ```bash
-   docker pull ghcr.io/[你的GitHub用户名]/ai_travel_planner:latest
-   # 例如：ghcr.io/nick9438919947/ai_travel_planner:latest
+   # 拉取最新版本镜像
+   docker pull ghcr.io/lzzz0001/travel_planner:latest
+   
+   # 或拉取特定版本镜像
+   docker pull ghcr.io/lzzz0001/travel_planner:e80922441c086e97ce2b6a0af7f1bf0b12842737
    ```
+   > 注意：GitHub Container Registry上的镜像为公共镜像，任何用户无需登录即可直接拉取。
 
 ### 🚀 运行镜像
 
-使用从任一仓库拉取的镜像运行应用：
-
 ```bash
-# 使用阿里云镜像
- docker run -p 8080:80 -p 3001:3001 \
-   -e SUPABASE_URL="你的Supabase URL" \
-   -e SUPABASE_KEY="你的Supabase密钥" \
-   -e ALI_BAILIAN_API_KEY="你的阿里云百炼API密钥" \
-   -e IFLYTEK_APPID="你的讯飞AppID" \
-   -e BAIDU_MAP_KEY="你的百度地图API密钥" \
-   crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com/my_reposiotory/travel_planner:latest
+# 方法1：使用GitHub Container Registry镜像（推荐，公共可访问）
+docker run -p 8080:80 -p 3001:3001 \
+  -v travel_planner_config:/app/backend/config.json \
+  ghcr.io/lzzz0001/travel_planner:e80922441c086e97ce2b6a0af7f1bf0b12842737
 
-# 或者使用GitHub镜像
- docker run -p 8080:80 -p 3001:3001 \
-   -e SUPABASE_URL="你的Supabase URL" \
-   -e SUPABASE_KEY="你的Supabase密钥" \
-   -e ALI_BAILIAN_API_KEY="你的阿里云百炼API密钥" \
-   -e IFLYTEK_APPID="你的讯飞AppID" \
-   -e BAIDU_MAP_KEY="你的百度地图API密钥" \
-   ghcr.io/[你的GitHub用户名]/ai_travel_planner:latest
+# 方法2：使用阿里云容器镜像服务镜像
+docker run -p 8080:80 -p 3001:3001 \
+  -v travel_planner_config:/app/backend/config.json \
+  crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com/my_reposiotory/travel_planner:e80922441c086e97ce2b6a0af7f1bf0b12842737
 ```
 
-### 📝 使用简短名称运行 (可选)
-
-```bash
-# 给镜像添加简短标签
-# 对于阿里云镜像
-docker tag crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com/my_reposiotory/travel_planner:latest travel_planner:latest
-
-# 或者对于GitHub镜像
-docker tag ghcr.io/[你的GitHub用户名]/ai_travel_planner:latest travel_planner:latest
-
-# 然后使用简短名称运行 (传统方式，通过环境变量)
- docker run -p 8080:80 -p 3001:3001 \
-   -e SUPABASE_URL="你的Supabase URL" \
-   -e SUPABASE_KEY="你的Supabase密钥" \
-   -e ALI_BAILIAN_API_KEY="你的阿里云百炼API密钥" \
-   -e IFLYTEK_APPID="你的讯飞AppID" \
-   -e BAIDU_MAP_KEY="你的百度地图API密钥" \
-   travel_planner:latest
-```
-
-### 🔧 通过前端设置按钮配置API密钥
-
-现在您可以在运行镜像后，通过应用界面的设置按钮直接配置所有API密钥，无需在命令行中设置环境变量：
-
-```bash
-# 使用持久化卷运行，确保配置在容器重启后保留
- docker run -p 8080:80 -p 3001:3001 \
-   -v travel_planner_config:/app/backend/config.json \
-   travel_planner:latest
-```
-
-配置步骤：
+配置API KEY步骤：
 1. 启动容器（如上命令所示）
 2. 访问应用：打开浏览器访问 http://localhost:8080
 3. 点击右上角的设置按钮
@@ -226,7 +197,11 @@ docker-compose up --build
 如果遇到 80 端口被占用的情况（常见于 Windows IIS 服务），请使用其他端口，如 8080：
 
 ```bash
-docker run -p 8080:80 -p 3001:3001 travel_planner:latest
+# 使用GitHub镜像
+docker run -p 8080:80 -p 3001:3001 ghcr.io/lzzz0001/travel_planner:latest
+
+# 或使用阿里云镜像
+docker run -p 8080:80 -p 3001:3001 crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com/my_reposiotory/travel_planner:latest
 ```
 
 ### 镜像名称过长
