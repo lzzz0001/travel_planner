@@ -115,8 +115,8 @@ app.post('/api/settings', async (req, res) => {
     if (success) {
       // 尝试验证连接是否正常工作
       try {
-        // 执行简单的查询来验证连接
-        const { data, error } = await supabaseClient.from('profiles').select('*').limit(1);
+        // 执行简单的查询来验证连接，使用已存在的travel_plans表
+        const { data, error } = await supabaseClient.from('travel_plans').select('*').limit(1);
         if (error) {
           console.warn('Supabase连接验证失败:', error.message);
           // 连接验证失败，但保留配置（可能是数据库结构不同）
