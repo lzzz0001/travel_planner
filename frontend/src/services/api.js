@@ -1,5 +1,6 @@
 // API service to communicate with the backend
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+// 使用相对路径，让请求通过Nginx代理转发到后端
+const API_BASE_URL = '/api';
 
 class ApiService {
   // Generate travel plan using AI
