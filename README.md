@@ -14,9 +14,9 @@
 
 ## 🚀 快速开始 (使用 Docker 镜像)
 
-### ☁️ 从容器仓库拉取镜像
+### ☁️ 从容器仓库拉取镜像（两种方法）
 
-#### 从阿里云容器镜像服务拉取
+#### 1.从阿里云容器镜像服务拉取
 
 1. **登录阿里云容器镜像服务**
    ```bash
@@ -29,7 +29,7 @@
    docker pull crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com/my_reposiotory/travel_planner:latest
    ```
 
-#### 从GitHub Container Registry拉取
+#### 2.从GitHub Container Registry拉取
 
 1. **登录GitHub Container Registry**
    ```bash
@@ -48,14 +48,14 @@
    ```
    > 注意：GitHub Container Registry上的镜像为公共镜像，任何用户无需登录即可直接拉取。
 
-### 🚀 运行镜像
+### 🚀 运行镜像（区分以上两种方法）
 
 ```bash
-# 方法1：使用GitHub Container Registry镜像（推荐，公共可访问）
-docker run -p 8080:80 -p 3001:3001 ghcr.io/lzzz0001/travel_planner:latest
-
-# 方法2：使用阿里云容器镜像服务镜像
+# 方法1：如果使用阿里云容器镜像服务镜像
 docker run -p 8080:80 -p 3001:3001 crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com/my_reposiotory/travel_planner:latest
+
+# 方法2：如果使用GitHub Container Registry镜像
+docker run -p 8080:80 -p 3001:3001 ghcr.io/lzzz0001/travel_planner:latest
 ```
 
 配置API KEY步骤：
