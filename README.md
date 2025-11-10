@@ -14,25 +14,6 @@
 
 ## 🚀 快速开始 (使用 Docker 镜像)
 
-### 📦 使用本地构建的 Docker 镜像
-
-#### 前提条件
-- 已安装 Docker
-- 已构建项目镜像 (详见 [构建说明](#构建-docker-镜像))
-
-#### 运行镜像
-
-```bash
-docker run -p 8080:80 -p 3001:3001 \
-    -v travel_planner_config:/app/backend/config.json \
-    ghcr.io/lzzzz0001/travel_planner:latest
-  
-  # 或使用特定版本
-  docker run -p 8080:80 -p 3001:3001 \
-    -v travel_planner_config:/app/backend/config.json \
-    ghcr.io/lzzzz0001/travel_planner:e80922441c086e97ce2b6a0af7f1bf0b12842737
-```
-
 ### ☁️ 从容器仓库拉取镜像
 
 #### 从阿里云容器镜像服务拉取
@@ -71,14 +52,10 @@ docker run -p 8080:80 -p 3001:3001 \
 
 ```bash
 # 方法1：使用GitHub Container Registry镜像（推荐，公共可访问）
-docker run -p 8080:80 -p 3001:3001 \
-  -v travel_planner_config:/app/backend/config.json \
-  ghcr.io/lzzz0001/travel_planner:e80922441c086e97ce2b6a0af7f1bf0b12842737
+docker run -p 8080:80 -p 3001:3001 ghcr.io/lzzz0001/travel_planner:latest
 
 # 方法2：使用阿里云容器镜像服务镜像
-docker run -p 8080:80 -p 3001:3001 \
-  -v travel_planner_config:/app/backend/config.json \
-  crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com/my_reposiotory/travel_planner:e80922441c086e97ce2b6a0af7f1bf0b12842737
+docker run -p 8080:80 -p 3001:3001 crpi-aoyxexbw214gy7ht.cn-hangzhou.personal.cr.aliyuncs.com/my_reposiotory/travel_planner:latest
 ```
 
 配置API KEY步骤：
@@ -104,91 +81,9 @@ docker run -p 8080:80 -p 3001:3001 \
 |---------|------|---------|
 | SUPABASE_URL | Supabase 项目 URL | **是** |
 | SUPABASE_KEY | Supabase API 密钥 | **是** |
-| ALI_BAILIAN_API_KEY | 阿里云百炼 API 密钥 | 是 |
+| ALI_BAILIAN_API_KEY | 阿里云百炼DashScope API 密钥 | 是 |
 | IFLYTEK_APPID | 讯飞开放平台 AppID | 是 |
 | BAIDU_MAP_KEY | 百度地图 API 密钥 | 是 |
-
-### 设置环境变量的方法
-
-#### 方法1：通过Docker命令行传递
-
-```bash
-docker run -p 8080:80 -p 3001:3001 \
-  -e SUPABASE_URL=your_actual_supabase_url \
-  -e SUPABASE_KEY=your_actual_supabase_key \
-  -e ALI_BAILIAN_API_KEY=your_actual_ali_bailian_api_key \
-  -e IFLYTEK_APPID=your_actual_iflytek_appid \
-  -e BAIDU_MAP_KEY=your_actual_baidu_map_key \
-  travel_planner:latest
-```
-
-#### 方法2：使用Docker Compose
-
-修改 `docker-compose.yml` 文件中的环境变量值，然后运行：
-
-```bash
-docker-compose up -d
-```
-
-#### 方法3：使用环境变量文件（推荐）
-
-1. **使用配置脚本（最简单）**：
-   - Windows系统：
-     ```powershell
-     .\\setup_env.ps1
-     ```
-   - Linux/Mac系统：
-     ```bash
-     chmod +x setup_env.sh
-     ./setup_env.sh
-     ```
-
-2. **手动配置**：
-   - 复制 `.env.example` 文件创建 `.env` 文件：
-     ```bash
-     cp backend/.env.example backend/.env
-     ```
-   - 编辑 `.env` 文件，填入实际的API密钥
-
-3. **验证配置**：运行环境变量测试脚本检查配置是否正确：
-   ```bash
-   node test_env.js
-   ```
-
-4. 使用以下命令运行容器并挂载环境变量文件：
-   ```bash
-   docker run -p 8080:80 -p 3001:3001 \
-     -v $(pwd)/backend/.env:/app/backend/.env:ro \
-     travel_planner:latest
-   ```
-   
-   或者取消 `docker-compose.yml` 中卷挂载的注释，然后使用Docker Compose运行：
-   ```bash
-   docker-compose up -d
-   ```
-
-## 🏗️ 构建 Docker 镜像
-
-如果你想从源码构建镜像：
-
-1. **克隆仓库**
-   ```bash
-   git clone <repository-url>
-   cd AI_Travel_Planner
-   ```
-
-2. **构建镜像**
-   ```bash
-   docker build -t travel_planner:latest .
-   ```
-
-## 🐳 Docker Compose 部署
-
-使用 Docker Compose 进行本地开发或测试环境部署：
-
-```bash
-docker-compose up --build
-```
 
 ## 🔧 常见问题
 
